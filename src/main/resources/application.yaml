@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: "metadium-did-resolver"
+
+server:
+  port: 3030
