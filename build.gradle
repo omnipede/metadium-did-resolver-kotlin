@@ -1,8 +1,13 @@
 plugins {
     id 'java'
+    id "org.jetbrains.kotlin.plugin.allopen" version "1.4.32"
     id 'org.jetbrains.kotlin.jvm' version '1.4.32'
     id 'org.springframework.boot' version '2.3.3.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+}
+
+allOpen {
+    annotation("org.springframework.context.annotation.Configuration")
 }
 
 group 'io.omnipede'
@@ -16,7 +21,14 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+    implementation group: 'org.web3j', name: 'core', version: '4.8.4'
+
+    // Web3j 에서 사용하는 okhttp 와 spring 에서 사용하는 okhttp 간에 버전 충돌이 발생하여 직접 okhttp 의존성을 선언함.
+    // 실제 어플리케이션 코드 내에서 참조하고 있지는 않음
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
 
     testImplementation ('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
