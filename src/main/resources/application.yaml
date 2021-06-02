@@ -4,3 +4,12 @@ spring:
 
 server:
   port: 3030
+
+# Metadium blockchain configuration
+metadium:
+  http-provider: 'https://api.metadium.com/prod'
+  identityRegistry-address: "0x42bbff659772231bb63c7c175a1021e080a4cf9d"
+  publicKeyResolver-address-list:
+    - "0xd9f39ab902f835400cfb424529bb0423d7342331"
+  serviceKeyResolver-address-list:
+    - "0x5d4b8c6c6abecf9b5277747fa15980b964c40ce3"
