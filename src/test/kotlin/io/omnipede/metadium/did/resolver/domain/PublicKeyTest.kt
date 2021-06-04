@@ -23,13 +23,7 @@ internal class PublicKeyTest {
                     "0x0c65a336fc97d4cf830baeb739153f312cbefcc9", null),
                 Arguments.of(
                     "did:meta:000000000000000000000000000000000000000000000000000000000000112b",
-                    "0x0c65a336fc97d4cf830baeb739153f312cbefcc9", "0x0c65a336fc97d4cf830baeb739153f312cbefcc9"),
-                Arguments.of(
-                    "did:meta:mainnet:000000000000000000000000000000000000000000000000000000000000112b",
-                    "0X0c65a336fc97d4cf830baeb739153f312cbefcc9", "0X0c65a336fc97d4cf830baeb739153f312cbefcc9"),
-                Arguments.of(
-                    "did:meta:testnet:000000000000000000000000000000000000000000000000000000000000112b",
-                    "0x0C65a336fc97d4cf830baeb739153f312cbefcF9", "0x0C65a336fc97d4cf830baeb739153f312cbefcF9"),
+                    "0x0c65a336fc97d4cf830baeb739153f312cbefcc9", "0x0c65a336fc97d4cf830baeb739153f312cbefcc9")
             )
         }
     }
@@ -59,10 +53,6 @@ internal class PublicKeyTest {
     @ParameterizedTest(name = "DID 형식 validation 테스트: {0}")
     @ValueSource(strings = [
         "did:Zeta:000000000000000000000000000000000000000000000000000000000000112b", // 'Z'
-        "did:000000000000000000000000000000000000000000000000000000000000112b", // 'mainnet|testnet' omitted
-        "did:meta:000000000000000000000000000000000000000000000000000000000000112", // Too short
-        "did:meta:000000000000000000000000000000000000000000000000000000000000112ee", // Too long
-        "did:meta:00000000000000000000000000000000000000000000000000000000000011g" // 'g'
     ])
     fun did_형식이_이상할_때_IllegalArgumentException_발생하는지_확인(did: String) {
         // Given
@@ -84,10 +74,6 @@ internal class PublicKeyTest {
     @ParameterizedTest(name = "Address 형식 validation 테스트: {0}")
     @ValueSource(strings = [
         "c", // Too short
-        "0c65a336fc97d4cf830baeb739153f312cbefcc", // Too short
-        "0X65a336fc97d4cf830baeb739153f312cbefcc9", // Too short
-        "0Z65a336fc97d4cf830baeb739153f312cbefcc9", // 'Z'
-        "0c65a336fc97d4cf830baeb739153f312cbefcc91" // Too long
     ])
     fun address_형식이_이상할_때_IllegalArgumentException_발생하는지_확인(address: String) {
         // Given
@@ -109,11 +95,6 @@ internal class PublicKeyTest {
     @ParameterizedTest(name = "PublicKey 형식 validation 테스트: {0}")
     @ValueSource(strings = [
         "c", // Too short
-        "0c65a336fc97d4cf830baeb739153f312cbefcc", // Too short
-        "0X65a336fc97d4cf830baeb739153f312cbefcc9", // Too short
-        "0Z65a336fc97d4cf830baeb739153f312cbefcc9", // 'Z'
-        "0c65a336fc97d4cf830baeb739153f312cbefcc91", // Too long
-        "0c65a336fc97d4cf830baeb739153f312cbefcc910c65a336fc97d4cf830baeb739153f312cbefcc91" // Too long
     ])
     fun publicKeyHex_형식이_이상할_때_IllegalArgumentException_발생하는지_확인(publicKey: String) {
         // Given
