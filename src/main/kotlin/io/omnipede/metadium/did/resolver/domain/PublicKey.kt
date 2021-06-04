@@ -41,7 +41,7 @@ class PublicKey(did: String, keyId: String, address: String) {
         return s.removePrefix("0x")
             .removePrefix("0X")
             .toList().stream().parallel().map {
-                if (it.isLowerCase()) it else it.toLowerCase()
+                it.toLowerCase()
             }.collect(Collectors.toList()).joinToString("")
     }
 }
