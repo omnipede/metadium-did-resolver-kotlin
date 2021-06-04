@@ -2,6 +2,7 @@ package io.omnipede.metadium.did.resolver.domain
 
 import io.omnipede.metadium.did.resolver.system.util.isValidDid
 import io.omnipede.metadium.did.resolver.system.util.isValidMetadiumAddress
+import java.util.stream.Collectors
 
 /**
  * DID 문서 에 포함될 PublicKey
@@ -13,6 +14,7 @@ class PublicKey(did: String, keyId: String, address: String) {
     val publicKeyHash: String = formatHexString(address)
     val id: String = "$did#$keyId#$publicKeyHash"
     var publicKeyHex: String? = null
+        private set
 
     init {
         // String validation
@@ -27,8 +29,7 @@ class PublicKey(did: String, keyId: String, address: String) {
         if (!publicKey.isValidMetadiumAddress())
             throw IllegalArgumentException("Invalid public key hex format: $publicKey")
         // Address 에서 0x prefix 를 삭제하고 lower case 로 만든다.
-        val formattedPublicKey = formatHexString(publicKey)
-        this.publicKeyHex = formattedPublicKey
+        this.publicKeyHex = formatHexString(publicKey)
     }
 
     /**
@@ -37,7 +38,10 @@ class PublicKey(did: String, keyId: String, address: String) {
      * @return 0x prefix 가 제거된 lower case 문자열
      */
     private fun formatHexString(s: String): String {
-         return if (s.startsWith("0x") || s.startsWith("0X"))
-            s.substring(2).toLowerCase() else s.toLowerCase()
+        return s.removePrefix("0x")
+            .removePrefix("0X")
+            .toList().stream().parallel().map {
+                it.toLowerCase()
+            }.collect(Collectors.toList()).joinToString("")
     }
 }
