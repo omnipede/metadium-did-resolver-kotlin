@@ -62,7 +62,10 @@ jacocoTestReport {
                             // Exclude smart contract wrapper class
                             '**io/omnipede/metadium/did/resolver/infra/contract/IdentityRegistry**',
                             '**io/omnipede/metadium/did/resolver/infra/contract/PublicKeyResolver**',
-                            '**io/omnipede/metadium/did/resolver/infra/contract/ServiceKeyResolver**'
+                            '**io/omnipede/metadium/did/resolver/infra/contract/ServiceKeyResolver**',
+
+                            // Exclude spring application class
+                            '**io/omnipede/metadium/did/resolver/ResolverServerApplication**'
                     ])
                 })
         )
@@ -92,7 +95,10 @@ jacocoTestCoverageVerification {
                             // Exclude smart contract wrapper class
                             '**io/omnipede/metadium/did/resolver/infra/contract/IdentityRegistry**',
                             '**io/omnipede/metadium/did/resolver/infra/contract/PublicKeyResolver**',
-                            '**io/omnipede/metadium/did/resolver/infra/contract/ServiceKeyResolver**'
+                            '**io/omnipede/metadium/did/resolver/infra/contract/ServiceKeyResolver**',
+
+                            // Exclude spring application class
+                            '**io/omnipede/metadium/did/resolver/ResolverServerApplication**'
                     ])
                 })
         )
