@@ -14,32 +14,11 @@ internal class PublicKeyTest {
 
     @Test
     @DisplayName("DID, address 이용해서 PublicKey 객체 생성")
-    fun publicKey_constructor_test_1() {
-        // Given
-        val did = "did:meta:000000000000000000000000000000000000000000000000000000000000112b"
-        val keyId = "Testing"
-        val address = "0x0c65a336fc97d4cf830baeb739153f312cbefcc9"
-        val publicKeyHex = "0x0c65a336fc97d4cf830baeb739153f312cbefcc9"
-
-        // When
-        val publicKey = PublicKey(did=did, keyId=keyId, address=address, publicKey=publicKeyHex)
-
-        // Then
-        assertThat(publicKey).isNotNull
-        assertThat(publicKey.type).isEqualTo("EcdsaSecp256k1VerificationKey2019")
-        assertThat(publicKey.controller).isEqualTo(did)
-        assertThat(publicKey.publicKeyHash).isEqualTo(address.substring(2).toLowerCase())
-        assertThat(publicKey.id).isEqualTo("$did#$keyId#${address.substring(2).toLowerCase()}")
-        assertThat(publicKey.publicKeyHex).isEqualTo(publicKeyHex)
-    }
-
-    @Test
-    @DisplayName("DID, address, publicKeyHex 이용해서 PublicKey 객체 생성")
     fun publicKey_constructor_test_2() {
         // Given
         val did = "did:meta:000000000000000000000000000000000000000000000000000000000000112b"
         val keyId = "Testing"
-        val address = "0x0c65a336fc97d4cf830baeb739153f312cbefcc9"
+        val address = "0x0C65a336fc97d4cf830baeb739153f312cbefcc9"
 
         // When
         val publicKey = PublicKey(did=did, keyId=keyId, address=address)
@@ -54,7 +33,28 @@ internal class PublicKeyTest {
     }
 
     @Test
-    @DisplayName("DID 형식 validation 테스트: {0}")
+    @DisplayName("DID, address, PublicKeyHex 이용해서 PublicKey 객체 생성")
+    fun publicKey_constructor_test_1() {
+        // Given
+        val did = "did:meta:000000000000000000000000000000000000000000000000000000000000112b"
+        val keyId = "Testing"
+        val address = "0C65a336fc97d4cf830baeb739153f312cbefcc9"
+        val publicKeyHex = "0XAC65A336fc97d4cf830baeb739153f312cbefcc9"
+
+        // When
+        val publicKey = PublicKey(did=did, keyId=keyId, address=address, publicKey=publicKeyHex)
+
+        // Then
+        assertThat(publicKey).isNotNull
+        assertThat(publicKey.type).isEqualTo("EcdsaSecp256k1VerificationKey2019")
+        assertThat(publicKey.controller).isEqualTo(did)
+        assertThat(publicKey.publicKeyHash).isEqualTo(address.toLowerCase())
+        assertThat(publicKey.id).isEqualTo("$did#$keyId#${address.toLowerCase()}")
+        assertThat(publicKey.publicKeyHex).isEqualTo(publicKeyHex.substring(2).toLowerCase())
+    }
+
+    @Test
+    @DisplayName("DID 형식 validation 테스트")
     fun did_형식이_이상할_때_IllegalArgumentException_발생하는지_확인() {
         // Given
         val did = "did:Zeta:000000000000000000000000000000000000000000000000000000000000112b"
