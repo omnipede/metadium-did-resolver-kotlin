@@ -1,5 +1,8 @@
 package io.omnipede.metadium.did.resolver.domain
 
+import io.omnipede.metadium.did.resolver.system.util.isValidDid
+import io.omnipede.metadium.did.resolver.system.util.isValidMetadiumAddress
+
 /**
  * DID 문서 에 포함될 PublicKey
  */
@@ -11,20 +14,17 @@ class PublicKey(did: String, keyId: String, address: String) {
     val id: String = "$did#$keyId#$publicKeyHash"
     var publicKeyHex: String? = null
 
-    // Address / publicKeyHex validation 용 Regex
-    private val addressRegex: Regex = Regex("^(0x|0X)?[0-9a-fA-F]{40}$")
-
     init {
         // String validation
-        if (!did.matches(Regex("^did:meta:((testnet|mainnet):)?[0-9a-f]{64}$")))
+        if (!did.isValidDid())
             throw IllegalArgumentException("Invalid DID format: $did")
-        if (!address.matches(addressRegex))
+        if (!address.isValidMetadiumAddress())
             throw IllegalArgumentException("Invalid address format: $address")
     }
 
     constructor(did: String, keyId: String, address: String, publicKey: String): this(did, keyId, address) {
         // String validation
-        if (!publicKey.matches(addressRegex))
+        if (!publicKey.isValidMetadiumAddress())
             throw IllegalArgumentException("Invalid public key hex format: $publicKey")
         // Address 에서 0x prefix 를 삭제하고 lower case 로 만든다.
         val formattedPublicKey = formatHexString(publicKey)
