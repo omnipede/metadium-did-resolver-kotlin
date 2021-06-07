@@ -5,6 +5,11 @@ spring:
 server:
   port: 3030
 
+# IdentityHub configuration
+identityHub:
+  id: "did:meta:0000000000000000000000000000000000000000000000000000000000000527"
+  url: "https://datahub.metadium.com"
+
 # Metadium blockchain configuration
 metadium:
   network: 'mainnet'
