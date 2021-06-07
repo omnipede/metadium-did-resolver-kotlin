@@ -11,7 +11,7 @@ class DidDocument(did: String) {
     val id = did
     val publicKeyList: MutableList<PublicKey> = mutableListOf()
     val authenticationList: MutableList<String> = mutableListOf()
-    val serviceList: MutableList<Service> = mutableListOf()
+    val associatedServiceList: MutableList<AssociatedService> = mutableListOf()
 
     init {
         // String validation
@@ -26,7 +26,7 @@ class DidDocument(did: String) {
             .stream().parallel().map { it.id }.collect(Collectors.toList())
     }
 
-    constructor(did: String, publicKeyList: List<PublicKey>, serviceList: List<Service>): this(did, publicKeyList) {
-        this.serviceList += serviceList
+    constructor(did: String, publicKeyList: List<PublicKey>, associatedServiceList: List<AssociatedService>): this(did, publicKeyList) {
+        this.associatedServiceList += associatedServiceList
     }
 }

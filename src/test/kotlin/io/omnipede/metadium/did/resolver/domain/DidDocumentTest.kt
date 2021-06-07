@@ -24,7 +24,7 @@ internal class DidDocumentTest {
         assertThat(didDocument.context).isEqualTo("https://w3id.org/did/v0.11")
         assertThat(didDocument.publicKeyList.size).isEqualTo(0)
         assertThat(didDocument.authenticationList.size).isEqualTo(0)
-        assertThat(didDocument.serviceList.size).isEqualTo(0)
+        assertThat(didDocument.associatedServiceList.size).isEqualTo(0)
     }
 
     @Test
@@ -47,7 +47,7 @@ internal class DidDocumentTest {
         assertThat(didDocument.context).isEqualTo("https://w3id.org/did/v0.11")
         assertThat(didDocument.publicKeyList.size).isEqualTo(2)
         assertThat(didDocument.authenticationList.size).isEqualTo(2)
-        assertThat(didDocument.serviceList.size).isEqualTo(0)
+        assertThat(didDocument.associatedServiceList.size).isEqualTo(0)
     }
 
     @Test
@@ -61,12 +61,12 @@ internal class DidDocumentTest {
             PublicKey(did, keyId, "0x0c65a336fc97d4cf830baeb739153f312cbefcc9")
         )
         val serviceEndPoint = "https://testing.metadium.com"
-        val serviceList: List<Service> = publicKeyList.stream().map {
-            Service(did=did, it, url=serviceEndPoint)
+        val associatedServiceList: List<AssociatedService> = publicKeyList.stream().map {
+            AssociatedService(did=did, it, url=serviceEndPoint)
         }.collect(Collectors.toList())
 
         // When
-        val didDocument = DidDocument(did=did, publicKeyList=publicKeyList, serviceList=serviceList)
+        val didDocument = DidDocument(did=did, publicKeyList=publicKeyList, associatedServiceList=associatedServiceList)
 
         // Then
         assertThat(didDocument).isNotNull
@@ -74,7 +74,7 @@ internal class DidDocumentTest {
         assertThat(didDocument.context).isEqualTo("https://w3id.org/did/v0.11")
         assertThat(didDocument.publicKeyList.size).isEqualTo(2)
         assertThat(didDocument.authenticationList.size).isEqualTo(2)
-        assertThat(didDocument.serviceList.size).isEqualTo(2)
+        assertThat(didDocument.associatedServiceList.size).isEqualTo(2)
     }
 
     @Test
