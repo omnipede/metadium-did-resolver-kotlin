@@ -1,6 +1,9 @@
 package io.omnipede.metadium.did.resolver.infra.env
 
 import io.omnipede.metadium.did.resolver.application.EnvService
+import io.omnipede.metadium.did.resolver.domain.AssociatedService
+import io.omnipede.metadium.did.resolver.domain.PublicKey
+import io.omnipede.metadium.did.resolver.system.config.IdentityHubProperty
 import io.omnipede.metadium.did.resolver.system.config.MetadiumConfigProperty
 import org.springframework.stereotype.Service
 
@@ -9,7 +12,8 @@ import org.springframework.stereotype.Service
  */
 @Service
 class PropertyService(
-    private val metadiumConfigProperty: MetadiumConfigProperty
+    private val metadiumConfigProperty: MetadiumConfigProperty,
+    private val identityHubProperty: IdentityHubProperty
 ): EnvService{
 
     /**
@@ -20,5 +24,19 @@ class PropertyService(
         if (metadiumConfigProperty.network == network)
             return true
         return false
+    }
+
+    /**
+     * Property 파일의 환경변수를 읽어 did document 에 포함될 service 객체를 생성하는 메소드
+     * @param pubKey 생성할 service 객체 내부에 포함될 public key
+     * @return
+     */
+    override fun createService(pubKey: PublicKey): AssociatedService {
+
+        return AssociatedService(
+            did=identityHubProperty.id,
+            publicKey=pubKey,
+            url=identityHubProperty.url
+        )
     }
 }
