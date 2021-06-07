@@ -7,6 +7,7 @@ server:
 
 # Metadium blockchain configuration
 metadium:
+  network: 'mainnet'
   http-provider: 'https://api.metadium.com/prod'
   identityRegistry-address: "0x42bbff659772231bb63c7c175a1021e080a4cf9d"
   publicKeyResolver-address-list:

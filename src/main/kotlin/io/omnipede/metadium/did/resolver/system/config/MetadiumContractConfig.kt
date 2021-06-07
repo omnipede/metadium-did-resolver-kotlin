@@ -1,10 +1,10 @@
-package io.omnipede.metadium.did.resolver.infra.contract
+package io.omnipede.metadium.did.resolver.system.config
 
+import io.omnipede.metadium.did.resolver.infra.contract.IdentityRegistry
+import io.omnipede.metadium.did.resolver.infra.contract.PublicKeyResolver
+import io.omnipede.metadium.did.resolver.infra.contract.ServiceKeyResolver
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
-import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.validation.annotation.Validated
@@ -14,35 +14,17 @@ import org.web3j.protocol.Web3j
 import org.web3j.protocol.http.HttpService
 import org.web3j.tx.gas.DefaultGasProvider
 import java.util.stream.Collectors
-import javax.validation.constraints.NotEmpty
 
 /**
  * Metadium 관련 bean configuration
  */
 @Configuration
-@ConstructorBinding
-@EnableConfigurationProperties
-@ConfigurationProperties(prefix = "metadium")
 @Validated
-class MetadiumContractConfig {
-
+class MetadiumContractConfig(
+    // Spring application properties 파일에서 환경설정 값을 읽어온다
+    private val metadiumConfigProperty: MetadiumConfigProperty
+) {
     val logger: Logger = LoggerFactory.getLogger(MetadiumContractConfig::class.java)
-
-    // Web3 http provider URL
-    @NotEmpty
-    lateinit var httpProvider: String
-
-    // IdentityRegistry contract 주소
-    @NotEmpty
-    lateinit var identityRegistryAddress: String
-
-    // PublicKeyResolver contract 주소
-    @NotEmpty
-    lateinit var publicKeyResolverAddressList: List<String>
-
-    // ServiceKeyResolver contract 주소
-    @NotEmpty
-    lateinit var serviceKeyResolverAddressList: List<String>
 
     /**
      * DID 발급 정보를 조회할 smart contract wrapper bean
@@ -50,8 +32,8 @@ class MetadiumContractConfig {
      */
     @Bean
     fun identityRegistry(web3j: Web3j, credentials: Credentials): IdentityRegistry {
-        logger.info("Loading IdentityRegistry contract with address {}", identityRegistryAddress)
-        return IdentityRegistry.load(identityRegistryAddress, web3j, credentials, DefaultGasProvider())
+        logger.info("Loading IdentityRegistry contract with address {}", metadiumConfigProperty.identityRegistryAddress)
+        return IdentityRegistry.load(metadiumConfigProperty.identityRegistryAddress, web3j, credentials, DefaultGasProvider())
     }
 
     /**
@@ -62,8 +44,8 @@ class MetadiumContractConfig {
      */
     @Bean
     fun publicKeyResolvers(web3j: Web3j, credentials: Credentials): List<PublicKeyResolver> {
-
-        return publicKeyResolverAddressList.stream().map {
+        // Contract address 를 읽어서 contract wrapper class 를 초기화시킨다
+        return metadiumConfigProperty.publicKeyResolverAddressList.stream().map {
             logger.info("Loading PublicKeyResolver contract with address {}", it)
             PublicKeyResolver.load(it, web3j, credentials, DefaultGasProvider())
         }.collect(Collectors.toList())
@@ -77,8 +59,8 @@ class MetadiumContractConfig {
      */
     @Bean
     fun serviceKeyResolvers(web3j: Web3j, credentials: Credentials): List<ServiceKeyResolver> {
-
-        return serviceKeyResolverAddressList.stream().map {
+        // Contract address 를 읽어서 contract wrapper class 를 초기화시킨다
+        return metadiumConfigProperty.serviceKeyResolverAddressList.stream().map {
             logger.info("Loading ServiceKeyResolver contract with address {}", it)
             ServiceKeyResolver.load(it, web3j, credentials, DefaultGasProvider())
         }.collect(Collectors.toList())
@@ -91,7 +73,7 @@ class MetadiumContractConfig {
     @Bean
     fun web3j(): Web3j {
 
-        return Web3j.build(HttpService(httpProvider))
+        return Web3j.build(HttpService(metadiumConfigProperty.httpProvider))
     }
 
     /**
