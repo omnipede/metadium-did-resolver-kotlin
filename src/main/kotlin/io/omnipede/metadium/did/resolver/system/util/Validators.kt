@@ -21,7 +21,7 @@ annotation class WebUrl(
 /**
  * Validator for WebUrl constraint
  */
-class WebUrlValidator: ConstraintValidator<WebUrl, String> {
+internal class WebUrlValidator: ConstraintValidator<WebUrl, String> {
 
     /**
      * Validation function
@@ -39,7 +39,7 @@ class WebUrlValidator: ConstraintValidator<WebUrl, String> {
 @Target(AnnotationTarget.FIELD, AnnotationTarget.TYPE)
 @MustBeDocumented
 @Constraint(validatedBy = [MetadiumNetValidator::class])
-annotation class MetadiumNet(
+internal annotation class MetadiumNet(
     val message: String = "Should be one of 'mainnet' or 'testnet'",
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<out Payload>> = []
@@ -74,7 +74,7 @@ annotation class MetadiumAddress(
 /**
  * Validator for MetadiumAddress constraint
  */
-class MetadiumAddressValidator: ConstraintValidator<MetadiumAddress, String> {
+internal class MetadiumAddressValidator: ConstraintValidator<MetadiumAddress, String> {
     override fun isValid(value: String?, context: ConstraintValidatorContext?): Boolean {
         if (value == null) return false
         return value.isValidMetadiumAddress()
@@ -87,7 +87,7 @@ class MetadiumAddressValidator: ConstraintValidator<MetadiumAddress, String> {
 @Target(allowedTargets = [AnnotationTarget.FIELD, ])
 @MustBeDocumented
 @Constraint(validatedBy = [MetadiumDIDValidator::class])
-annotation class MetadiumDID(
+internal annotation class MetadiumDID(
     val message: String = "Should have valid metadium DID format",
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<out Payload>> = []
@@ -96,7 +96,7 @@ annotation class MetadiumDID(
 /**
  * Validator for MetadiumDID constraint
  */
-class MetadiumDIDValidator: ConstraintValidator<MetadiumDID, String> {
+internal class MetadiumDIDValidator: ConstraintValidator<MetadiumDID, String> {
     override fun isValid(value: String?, context: ConstraintValidatorContext?): Boolean {
         if (value == null) return false
         return value.isValidDid()
