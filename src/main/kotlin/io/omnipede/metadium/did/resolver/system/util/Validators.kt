@@ -80,3 +80,25 @@ class MetadiumAddressValidator: ConstraintValidator<MetadiumAddress, String> {
         return value.isValidMetadiumAddress()
     }
 }
+
+/**
+ * Valid metadium DID constraint
+ */
+@Target(allowedTargets = [AnnotationTarget.FIELD, ])
+@MustBeDocumented
+@Constraint(validatedBy = [MetadiumDIDValidator::class])
+annotation class MetadiumDID(
+    val message: String = "Should have valid metadium DID format",
+    val groups: Array<KClass<*>> = [],
+    val payload: Array<KClass<out Payload>> = []
+)
+
+/**
+ * Validator for MetadiumDID constraint
+ */
+class MetadiumDIDValidator: ConstraintValidator<MetadiumDID, String> {
+    override fun isValid(value: String?, context: ConstraintValidatorContext?): Boolean {
+        if (value == null) return false
+        return value.isValidDid()
+    }
+}
