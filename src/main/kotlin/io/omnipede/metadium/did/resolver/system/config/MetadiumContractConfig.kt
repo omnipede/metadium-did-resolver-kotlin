@@ -19,7 +19,6 @@ import java.util.stream.Collectors
  * Metadium 관련 bean configuration
  */
 @Configuration
-@Validated
 class MetadiumContractConfig(
     // Spring application properties 파일에서 환경설정 값을 읽어온다
     private val metadiumConfigProperty: MetadiumConfigProperty

@@ -1,5 +1,6 @@
 package io.omnipede.metadium.did.resolver.system.config
 
+import io.omnipede.metadium.did.resolver.system.util.MetadiumDID
 import io.omnipede.metadium.did.resolver.system.util.WebUrl
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotEmpty
 class IdentityHubProperty {
 
     @NotEmpty
+    @MetadiumDID
     lateinit var id: String
 
     @NotEmpty

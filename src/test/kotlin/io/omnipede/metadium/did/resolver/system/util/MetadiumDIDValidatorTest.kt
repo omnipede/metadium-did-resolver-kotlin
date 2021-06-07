@@ -12,7 +12,7 @@ internal class MetadiumDIDValidatorTest {
 
     var validator: Validator? = null
 
-    // @MetadiumAddress annotation 을 적용한 클래스
+    // @MetadiumDID annotation 을 적용한 클래스
     class Usage {
         @MetadiumDID
         var did: String? = null

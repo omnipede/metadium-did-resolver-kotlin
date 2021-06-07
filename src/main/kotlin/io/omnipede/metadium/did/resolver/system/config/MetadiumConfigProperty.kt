@@ -14,7 +14,6 @@ import javax.validation.constraints.NotEmpty
 import javax.validation.valueextraction.Unwrapping
 
 @Configuration
-@ConstructorBinding
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "metadium")
 @Validated
