@@ -1,20 +1,27 @@
-package io.omnipede.metadium.did.resolver.infra.contract
+package io.omnipede.metadium.did.resolver.system.config
 
+import io.omnipede.metadium.did.resolver.infra.contract.PublicKeyResolver
+import io.omnipede.metadium.did.resolver.infra.contract.ServiceKeyResolver
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
+import org.assertj.core.api.AssertionsForInterfaceTypes.catchThrowable
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 class MetadiumContractConfigTest {
 
+    private lateinit var metadiumConfigProperty: MetadiumConfigProperty
     private lateinit var metadiumContractConfig: MetadiumContractConfig
 
     @BeforeEach
     fun setup() {
-        metadiumContractConfig = MetadiumContractConfig()
-        metadiumContractConfig.httpProvider = "https://api.metadium.com/prod"
-        metadiumContractConfig.identityRegistryAddress = "0x42bbff659772231bb63c7c175a1021e080a4cf9d"
-        metadiumContractConfig.publicKeyResolverAddressList = listOf("0xd9f39ab902f835400cfb424529bb0423d7342331");
-        metadiumContractConfig.serviceKeyResolverAddressList = listOf("0x5d4b8c6c6abecf9b5277747fa15980b964c40ce3")
+        metadiumConfigProperty = MetadiumConfigProperty()
+        metadiumConfigProperty.network = "mainnet"
+        metadiumConfigProperty.httpProvider = "https://api.metadium.com/prod"
+        metadiumConfigProperty.identityRegistryAddress = "0x42bbff659772231bb63c7c175a1021e080a4cf9d"
+        metadiumConfigProperty.publicKeyResolverAddressList = listOf("0xd9f39ab902f835400cfb424529bb0423d7342331")
+        metadiumConfigProperty.serviceKeyResolverAddressList = listOf("0x5d4b8c6c6abecf9b5277747fa15980b964c40ce3")
+        metadiumContractConfig = MetadiumContractConfig(metadiumConfigProperty)
     }
 
     @Test
