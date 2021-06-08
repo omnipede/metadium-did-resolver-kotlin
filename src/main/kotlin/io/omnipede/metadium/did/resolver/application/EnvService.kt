@@ -21,4 +21,10 @@ interface EnvService {
      * @return 생성된 service object
      */
     fun createService(pubKey: PublicKey): AssociatedService
+
+    /**
+     * 환경설정 값을 이용해서 메타데이터 객체를 불러오는 메소드
+     * @return Metadata 객체
+     */
+    fun loadMetaData(): MetaData
 }

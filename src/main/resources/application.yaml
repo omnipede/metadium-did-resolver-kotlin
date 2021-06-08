@@ -5,6 +5,9 @@ spring:
 server:
   port: 3030
 
+resolver:
+  driverId: "did-meta"
+
 # IdentityHub configuration
 identityHub:
   id: "did:meta:0000000000000000000000000000000000000000000000000000000000000527"
