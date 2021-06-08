@@ -35,10 +35,12 @@ class ResolverMetaData(
     // Document 캐시 여부
     var cached: Boolean = false
     val driver: String = "HttpDriver"
+    val retrieved: Date = Date()
     // Document resolving 하는데 걸린 시간
     var duration: Long = 0L
         private set
 
+    // 측정 시작 시각
     private var resolvingStart: Date = Date()
 
     /**
