@@ -6,7 +6,7 @@ import io.omnipede.metadium.did.resolver.system.util.isValidWebUrl
 /**
  * Service DS
  */
-class Service(did: String, publicKey: PublicKey, url: String) {
+class AssociatedService(did: String, publicKey: PublicKey, url: String) {
 
     val id = did
     val publicKey = publicKey.id

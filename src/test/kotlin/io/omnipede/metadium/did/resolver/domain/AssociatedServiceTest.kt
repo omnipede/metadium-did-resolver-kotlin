@@ -4,12 +4,8 @@ import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.assertj.core.api.AssertionsForInterfaceTypes.catchThrowable
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.MethodSource
-import java.util.stream.Stream
 
-internal class ServiceTest {
+internal class AssociatedServiceTest {
 
     @Test
     @DisplayName("Service 객체 생성 테스트")
@@ -23,7 +19,7 @@ internal class ServiceTest {
         val url = "https://datahub.metadium.com"
 
         // When
-        val service = Service(did=did, publicKey=publicKey, url=url)
+        val service = AssociatedService(did=did, publicKey=publicKey, url=url)
 
         // Then
         assertThat(service).isNotNull
@@ -48,7 +44,7 @@ internal class ServiceTest {
 
         // When
         val throwable: Throwable? = catchThrowable {
-            Service(did=did, publicKey=publicKey, url=url)
+            AssociatedService(did=did, publicKey=publicKey, url=url)
         }
 
         // Then
@@ -72,7 +68,7 @@ internal class ServiceTest {
 
         // When
         val throwable: Throwable? = catchThrowable {
-            Service(did=did, publicKey=publicKey, url=url)
+            AssociatedService(did=did, publicKey=publicKey, url=url)
         }
 
         // Then
