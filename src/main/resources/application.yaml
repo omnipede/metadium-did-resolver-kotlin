@@ -1,9 +1,21 @@
 spring:
   application:
     name: "metadium-did-resolver"
+  resources:
+    add-mappings: false
+  mvc:
+    throw-exception-if-no-handler-found: true
+  jackson:
+    default-property-inclusion: non_null
 
 server:
   port: 3030
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+      force-response: true
 
 resolver:
   driverId: "did-meta"
