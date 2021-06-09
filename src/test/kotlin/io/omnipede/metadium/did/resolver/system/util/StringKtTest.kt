@@ -61,6 +61,8 @@ internal class StringKtTest {
     @ParameterizedTest(name = "틀린 metadium address 형식 테스트: {0}")
     @ValueSource(strings = [
         "c", // Too short
+        "0x",
+        "0X",
         "0c65a336fc97d4cf830baeb739153f312cbefcc", // Too short
         "0X65a336fc97d4cf830baeb739153f312cbefcc9", // Too short
         "0Z65a336fc97d4cf830baeb739153f312cbefcc9", // 'Z'
@@ -71,6 +73,42 @@ internal class StringKtTest {
 
         // When
         val result = address.isValidMetadiumAddress()
+
+        // Then
+        assertThat(result).isFalse
+    }
+
+    @ParameterizedTest(name = "올바른 metadium public key hex 형식 테스트: {0}")
+    @ValueSource(strings = [
+        "49f78d9ef20ede7f29702b6c30236482e35528adb1be25e0cea5c55a6337b0adc3e9d12c75bb46e6b7a589c7cd538a9d47a1cadca37286d249be01b83a95db83",
+        "0x49f78d9ef20ede7f29702b6c30236482e35528adb1be25e0cea5c55a6337b0adc3e9d12c75bb46e6b7a589c7cd538a9d47a1cadca37286d249be01b83a95db83",
+        "0X49f78d9ef20ede7f29702b6c30236482e35528adb1be25e0cea5c55a6337b0adc3e9d12c75bb46e6b7a589c7cd538a9d47a1cadca37286d249be01b83a95db83",
+        "0XA8f78d9ef20ede7f29702b6c30236482e35528adb1be25e0cea5c55a6337b0adc3e9d12c75bb46e6b7a589c7cd538a9d47a1cadca37286d249be01b83a95db83"
+    ])
+    fun metadium_public_key_hex_format_test(s: String) {
+
+        // Given
+
+        // When
+        val result = s.isValidMetadiumPublicKeyHex()
+
+        // Then
+        assertThat(result).isTrue
+    }
+
+    @ParameterizedTest(name = "올바른 metadium public key hex 형식 테스트: {0}")
+    @ValueSource(strings = [
+        "4",
+        "0x",
+        "0X",
+        "0XA8f78d9ef20ede7f29702b6c30236482e35528adb1be2"
+    ])
+    fun wrong_metadium_public_key_hex_format_test(s: String) {
+
+        // Given
+
+        // When
+        val result = s.isValidMetadiumPublicKeyHex()
 
         // Then
         assertThat(result).isFalse
@@ -109,5 +147,22 @@ internal class StringKtTest {
 
         // Then
         assertThat(result).isFalse
+    }
+
+    @ParameterizedTest(name = "16진수 문자열 정규화 테스트: {0}")
+    @ValueSource(strings = [
+        "0x49f78d9ef20ede7f29702b6c30236482e35528adb1be25e0cea5c55a6337b0adc3e9d12c75bb46e6b7a589c7cd538a9d47a1cadca37286d249be01b83a95db83",
+        "0x45",
+        "0X4AbcE",
+    ])
+    fun hex_string_normalization_test(s: String) {
+
+        // Given
+
+        // When
+        val t = s.toNormalizedHex()
+
+        // Then
+        assertThat(t).isEqualTo(s.removePrefix("0x").removePrefix("0X").toLowerCase())
     }
 }
