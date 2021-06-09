@@ -2,6 +2,7 @@ package io.omnipede.metadium.did.resolver.domain
 
 import io.omnipede.metadium.did.resolver.system.util.isValidDid
 import io.omnipede.metadium.did.resolver.system.util.isValidMetadiumAddress
+import io.omnipede.metadium.did.resolver.system.util.isValidMetadiumPublicKeyHex
 import java.util.stream.Collectors
 
 /**
@@ -26,7 +27,7 @@ class PublicKey(did: String, keyId: String, address: String) {
 
     constructor(did: String, keyId: String, address: String, publicKey: String): this(did, keyId, address) {
         // String validation
-        if (!publicKey.isValidMetadiumAddress())
+        if (!publicKey.isValidMetadiumPublicKeyHex())
             throw IllegalArgumentException("Invalid public key hex format: $publicKey")
         // Address 에서 0x prefix 를 삭제하고 lower case 로 만든다.
         this.publicKeyHex = formatHexString(publicKey)

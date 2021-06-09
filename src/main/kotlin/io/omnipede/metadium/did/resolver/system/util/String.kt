@@ -26,6 +26,17 @@ internal fun String.isValidMetadiumAddress(): Boolean {
 }
 
 /**
+ * Check whether parameter string has valid metadium public key hex format
+ * @return True when parameter has valid format, else return false
+ */
+internal fun String.isValidMetadiumPublicKeyHex(): Boolean {
+    val regex = Regex("^(0x|0X)?[0-9a-fA-F]{128}$")
+    if (this.matches(regex))
+        return true
+    return false
+}
+
+/**
  * Checks whether parameter string has valid URL format
  * @return true when parameter has valid format, else return false
  */
