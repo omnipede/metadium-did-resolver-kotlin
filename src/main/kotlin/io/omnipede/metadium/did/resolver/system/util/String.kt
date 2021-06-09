@@ -1,6 +1,7 @@
 package io.omnipede.metadium.did.resolver.system.util
 
 import org.apache.commons.validator.routines.UrlValidator
+import java.util.stream.Collectors
 
 
 /**
@@ -44,4 +45,16 @@ internal fun String.isValidWebUrl(): Boolean {
     val schemes = arrayOf("http", "https")
     val urlValidator = UrlValidator(schemes)
     return urlValidator.isValid(this)
+}
+
+/**
+ * 16 진수 문자열의 접두사를 제거하고 소문자로 수정하는 메소드
+ * @return 정규화된 16진수 문자열
+ */
+internal fun String.toNormalizedHex(): String {
+    return this.removePrefix("0x")
+        .removePrefix("0X")
+        .toList().stream().parallel().map {
+            it.toLowerCase()
+        }.collect(Collectors.toList()).joinToString("")
 }
