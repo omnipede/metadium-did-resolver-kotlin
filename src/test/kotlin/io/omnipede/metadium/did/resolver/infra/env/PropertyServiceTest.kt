@@ -1,6 +1,6 @@
 package io.omnipede.metadium.did.resolver.infra.env
 
-import io.omnipede.metadium.did.resolver.domain.PublicKey
+import io.omnipede.metadium.did.resolver.domain.entity.PublicKey
 import io.omnipede.metadium.did.resolver.system.config.IdentityHubProperty
 import io.omnipede.metadium.did.resolver.system.config.MetadiumConfigProperty
 import io.omnipede.metadium.did.resolver.system.config.ResolverProperty

@@ -1,11 +1,11 @@
 package io.omnipede.metadium.did.resolver.infra.env
 
-import io.omnipede.metadium.did.resolver.application.EnvService
-import io.omnipede.metadium.did.resolver.application.MetaData
-import io.omnipede.metadium.did.resolver.application.MethodMetaData
-import io.omnipede.metadium.did.resolver.application.ResolverMetaData
-import io.omnipede.metadium.did.resolver.domain.AssociatedService
-import io.omnipede.metadium.did.resolver.domain.PublicKey
+import io.omnipede.metadium.did.resolver.domain.ports.EnvService
+import io.omnipede.metadium.did.resolver.domain.ports.MetaData
+import io.omnipede.metadium.did.resolver.domain.ports.MethodMetaData
+import io.omnipede.metadium.did.resolver.domain.ports.ResolverMetaData
+import io.omnipede.metadium.did.resolver.domain.entity.AssociatedService
+import io.omnipede.metadium.did.resolver.domain.entity.PublicKey
 import io.omnipede.metadium.did.resolver.system.config.IdentityHubProperty
 import io.omnipede.metadium.did.resolver.system.config.MetadiumConfigProperty
 import io.omnipede.metadium.did.resolver.system.config.ResolverProperty
@@ -19,7 +19,7 @@ class PropertyService(
     private val metadiumConfigProperty: MetadiumConfigProperty,
     private val identityHubProperty: IdentityHubProperty,
     private val resolverProperty: ResolverProperty
-): EnvService{
+): EnvService {
 
     /**
      * 환경설정의 network 와 parameter 의 network 가 일치하는지 확인하는 메소드

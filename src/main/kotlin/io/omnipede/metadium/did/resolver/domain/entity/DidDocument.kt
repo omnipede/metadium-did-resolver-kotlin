@@ -1,4 +1,4 @@
-package io.omnipede.metadium.did.resolver.domain
+package io.omnipede.metadium.did.resolver.domain.entity
 
 import io.omnipede.metadium.did.resolver.system.util.isValidDid
 import java.util.stream.Collectors

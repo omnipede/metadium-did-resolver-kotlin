@@ -1,5 +1,8 @@
-package io.omnipede.metadium.did.resolver.application
+package io.omnipede.metadium.did.resolver.domain.ports
 
+import io.omnipede.metadium.did.resolver.domain.ports.MetaData
+import io.omnipede.metadium.did.resolver.domain.ports.MethodMetaData
+import io.omnipede.metadium.did.resolver.domain.ports.ResolverMetaData
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested

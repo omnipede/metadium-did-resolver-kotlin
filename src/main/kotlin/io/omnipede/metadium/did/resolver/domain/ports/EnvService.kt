@@ -1,7 +1,7 @@
-package io.omnipede.metadium.did.resolver.application
+package io.omnipede.metadium.did.resolver.domain.ports
 
-import io.omnipede.metadium.did.resolver.domain.PublicKey
-import io.omnipede.metadium.did.resolver.domain.AssociatedService
+import io.omnipede.metadium.did.resolver.domain.entity.PublicKey
+import io.omnipede.metadium.did.resolver.domain.entity.AssociatedService
 
 /**
  * 서버 외부 환경설정을 조회할 때 사용하는 인터페이스
