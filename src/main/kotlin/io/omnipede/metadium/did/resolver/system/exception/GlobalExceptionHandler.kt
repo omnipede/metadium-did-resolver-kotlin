@@ -5,8 +5,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
-import org.springframework.validation.BindException
-import org.springframework.validation.FieldError
 import org.springframework.web.HttpMediaTypeNotSupportedException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -34,22 +32,7 @@ internal class GlobalExceptionHandler {
     fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<RestError?> {
         val errorCode = ErrorCode.BAD_REQUEST
         val fieldError = e.bindingResult.fieldError
-        var message: String = errorCode.defaultMessage
-        if (fieldError != null) message = fieldError.field + ": " + fieldError.defaultMessage
-        return createResponseEntityAndLogError(errorCode, message, e)
-    }
-
-    /**
-     * Bind exception handler, 클라이언트 request 를
-     * Query, path, body 로 bind 하지 못할 기 발생하는 에러를 헨들링하는 메소드
-     * Path parameter 또는 Query parameter validation 시 주로 발생
-     */
-    @ExceptionHandler(BindException::class)
-    fun handleBindException(e: BindException): ResponseEntity<RestError?> {
-        val errorCode = ErrorCode.BAD_REQUEST
-        val fieldError = e.bindingResult.fieldError
-        var message: String = errorCode.defaultMessage
-        if (fieldError != null) message = fieldError.field + ": " + fieldError.defaultMessage
+        val message: String = fieldError!!.field + ": " + fieldError.defaultMessage
         return createResponseEntityAndLogError(errorCode, message, e)
     }
 
@@ -107,7 +90,7 @@ internal class GlobalExceptionHandler {
     fun handleHttpMediaTypeNotSupportedException(e: HttpMediaTypeNotSupportedException): ResponseEntity<RestError?> {
         val errorCode = ErrorCode.BAD_REQUEST
         val message = e.message
-        return createResponseEntityAndLogError(errorCode, message, e)
+        return createResponseEntityAndLogError(errorCode, message!!, e)
     }
 
     /**
@@ -116,7 +99,7 @@ internal class GlobalExceptionHandler {
     @ExceptionHandler(Exception::class)
     fun handleException(e: Exception): ResponseEntity<RestError?> {
         val errorCode = ErrorCode.INTERNAL_SERVER_ERROR
-        val message = e.message
+        val message = e.message ?: errorCode.defaultMessage
         return createResponseEntityAndLogError(errorCode, message, e)
     }
 
@@ -129,12 +112,11 @@ internal class GlobalExceptionHandler {
      */
     private fun createResponseEntityAndLogError(
         errorCode: ErrorCode,
-        detailedMessage: String?,
+        detailedMessage: String,
         e: Throwable
     ): ResponseEntity<RestError?> {
         logError(e, errorCode)
-        val message = detailedMessage ?: errorCode.defaultMessage
-        val restError = RestError(errorCode.status, message)
+        val restError = RestError(errorCode.status, detailedMessage)
         return ResponseEntity<RestError?>(restError, HttpStatus.valueOf(restError.status))
     }
 

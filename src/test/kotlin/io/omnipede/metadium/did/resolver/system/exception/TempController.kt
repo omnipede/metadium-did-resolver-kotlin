@@ -1,7 +1,5 @@
 package io.omnipede.metadium.did.resolver.system.exception
 
-import org.springframework.validation.annotation.Validated
-import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 import javax.validation.constraints.Max
@@ -10,7 +8,6 @@ import javax.validation.constraints.Max
  * Exception handler test 용 HTTP controller
  */
 @RestController
-@Validated
 internal class TempController {
 
     @GetMapping(value = ["/api/v1/temp"], headers = ["content-type=application/json"])
