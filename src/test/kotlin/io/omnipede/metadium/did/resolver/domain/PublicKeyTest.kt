@@ -39,7 +39,7 @@ internal class PublicKeyTest {
         val did = "did:meta:000000000000000000000000000000000000000000000000000000000000112b"
         val keyId = "Testing"
         val address = "0C65a336fc97d4cf830baeb739153f312cbefcc9"
-        val publicKeyHex = "0XAC65A336fc97d4cf830baeb739153f312cbefcc9"
+        val publicKeyHex = "0X48f78d9ef20ede7f29702b6c30236482e35528adb1be25e0cea5c55a6337b0adc3e9d12c75bb46e6b7a589c7cd538a9d47a1cadca37286d249be01b83a95db83"
 
         // When
         val publicKey = PublicKey(did=did, keyId=keyId, address=address, publicKey=publicKeyHex)
