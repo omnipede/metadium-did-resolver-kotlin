@@ -22,13 +22,11 @@ class PropertyService(
 ): EnvService {
 
     /**
-     * 환경설정의 network 와 parameter 의 network 가 일치하는지 확인하는 메소드
-     * @return Network 일치여부
+     * Property 파일의 network 변수를 반환하는 메소드
+     * @return Network 변수
      */
-    override fun isSameNetwork(network: String): Boolean {
-        if (metadiumConfigProperty.network == network)
-            return true
-        return false
+    override fun getNetwork(): String {
+        return metadiumConfigProperty.network
     }
 
     /**
