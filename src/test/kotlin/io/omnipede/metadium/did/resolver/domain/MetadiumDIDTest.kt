@@ -23,7 +23,7 @@ internal class MetadiumDIDTest {
 
         // Then
         assertThat(metaDID.net).isEqualTo("mainnet")
-        assertThat(metaDID.metaId).isEqualTo("000000000000000000000000000000000000000000000000000000000000112b")
+        assertThat(metaDID.ein).isEqualTo("000000000000000000000000000000000000000000000000000000000000112b".toBigInteger(16))
         assertThat(metaDID.toString()).isEqualTo("did:meta:000000000000000000000000000000000000000000000000000000000000112b")
     }
 
@@ -39,7 +39,7 @@ internal class MetadiumDIDTest {
 
         // Then
         assertThat(metaDID.net).isEqualTo("testnet")
-        assertThat(metaDID.metaId).isEqualTo("000000000000000000000000000000000000000000000000000000000000112b")
+        assertThat(metaDID.ein).isEqualTo("000000000000000000000000000000000000000000000000000000000000112b".toBigInteger(16))
         assertThat(metaDID.toString()).isEqualTo("did:meta:testnet:000000000000000000000000000000000000000000000000000000000000112b")
     }
 
