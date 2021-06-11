@@ -22,14 +22,6 @@ class PropertyService(
 ): EnvService {
 
     /**
-     * Property 파일의 network 변수를 반환하는 메소드
-     * @return Network 변수
-     */
-    override fun getNetwork(): String {
-        return metadiumConfigProperty.network
-    }
-
-    /**
      * Property 파일의 환경변수를 읽어 did document 에 포함될 service 객체를 생성하는 메소드
      * @param pubKey 생성할 service 객체 내부에 포함될 public key
      * @return DID document 에 포함될 service 객체

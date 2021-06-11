@@ -9,12 +9,6 @@ import io.omnipede.metadium.did.resolver.domain.entity.AssociatedService
 interface EnvService {
 
     /**
-     * Network 환경변수를 반환하는 메소드
-     * @return Network 환경변수
-     */
-    fun getNetwork(): String
-
-    /**
      * 환경설정 값을 이용해서 DID document 에 포함될 service 를 생성하는 메소드
      * @param pubKey DID document 에 포함될 service 의
      * @return 생성된 service object
