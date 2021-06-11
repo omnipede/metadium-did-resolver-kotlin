@@ -1,6 +1,6 @@
 package io.omnipede.metadium.did.resolver.system.exception
 
-class SystemException: Exception  {
+class SystemException: RuntimeException  {
 
     var errorCode: ErrorCode
         private set
