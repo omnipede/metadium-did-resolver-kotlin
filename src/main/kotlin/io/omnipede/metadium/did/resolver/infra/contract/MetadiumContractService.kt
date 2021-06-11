@@ -5,6 +5,7 @@ import io.omnipede.metadium.did.resolver.domain.ports.ContractService
 import io.omnipede.metadium.did.resolver.domain.entity.MetadiumDID
 import io.omnipede.metadium.did.resolver.domain.entity.PublicKey
 import io.omnipede.metadium.did.resolver.domain.ports.NotFoundIdentityException
+import io.omnipede.metadium.did.resolver.domain.ports.PublicKeyListResult
 import io.omnipede.metadium.did.resolver.system.util.toNormalizedHex
 import org.springframework.stereotype.Service
 import java.util.*
@@ -24,7 +25,7 @@ internal class MetadiumContractService(
      * @param metaDID 대상 DID
      * @return 대상 DID 와 맵핑되는 public key list
      */
-    override fun findPublicKeyList(metaDID: MetadiumDID): Either<NotFoundIdentityException, List<PublicKey>> {
+    override fun findPublicKeyList(metaDID: MetadiumDID): Either<NotFoundIdentityException, PublicKeyListResult> {
 
         // Find associated address and resolver address of meta DID
         val ( associatedAddresses, identityResolverAddresses ) = findAddressesOfAssociatedAndResolver(metaDID)
@@ -36,14 +37,17 @@ internal class MetadiumContractService(
             return Either.Left(e)
         }
 
-        // Create service key list
-        val serviceKeyList: List<PublicKey> = findServiceKeyList(metaDID, serviceKeyContracts)
-
         // For each associated address,
         val publicKeyList: List<PublicKey> = findPublicKeyList(metaDID, associatedAddresses,  publicKeyContracts)
 
-        // ==> Finally get public key object list
-        return Either.Right(listOf(serviceKeyList, publicKeyList).flatten())
+        // Create service key list
+        val serviceKeyList: List<PublicKey> = findServiceKeyList(metaDID, serviceKeyContracts)
+
+        // Finally get public key object list
+        // (!) 주의. public key  가 service key list 보다 순서가 앞에 와야 한다
+        return Either.Right(
+            PublicKeyListResult(publicKeyList=publicKeyList, serviceKeyList=serviceKeyList)
+        )
     }
 
     /**
@@ -73,7 +77,6 @@ internal class MetadiumContractService(
         if (associatedAddresses.isEmpty())
             throw NotFoundIdentityException("Deleted meta id")
 
-        // For each identity resolvers
         val identityResolverAddresses = identity.component4()
 
         return associatedAddresses to identityResolverAddresses
