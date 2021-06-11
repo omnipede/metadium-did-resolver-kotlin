@@ -28,14 +28,14 @@ internal class MetadiumContractService(
     override fun findPublicKeyList(metaDID: MetadiumDID): Either<NotFoundIdentityException, PublicKeyListResult> {
 
         // Find associated address and resolver address of meta DID
-        val ( associatedAddresses, identityResolverAddresses ) = findAddressesOfAssociatedAndResolver(metaDID)
-
-        // Find valid contracts using resolver address
-        val ( publicKeyContracts, serviceKeyContracts ) = try {
-            findValidContracts(identityResolverAddresses)
+        val ( associatedAddresses, identityResolverAddresses ) = try {
+            findAddressesOfAssociatedAndResolver(metaDID)
         } catch (e: NotFoundIdentityException) {
             return Either.Left(e)
         }
+
+        // Find valid contracts using resolver address
+        val ( publicKeyContracts, serviceKeyContracts ) = findValidContracts(identityResolverAddresses)
 
         // For each associated address,
         val publicKeyList: List<PublicKey> = findPublicKeyList(metaDID, associatedAddresses,  publicKeyContracts)
