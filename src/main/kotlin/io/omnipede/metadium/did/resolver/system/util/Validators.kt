@@ -84,7 +84,7 @@ internal class MetadiumAddressValidator: ConstraintValidator<MetadiumAddress, St
 /**
  * Valid metadium DID constraint
  */
-@Target(allowedTargets = [AnnotationTarget.FIELD, ])
+@Target(allowedTargets = [AnnotationTarget.FIELD, AnnotationTarget.VALUE_PARAMETER])
 @MustBeDocumented
 @Constraint(validatedBy = [MetadiumDIDValidator::class])
 internal annotation class MetadiumDID(
