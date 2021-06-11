@@ -7,6 +7,7 @@ import io.omnipede.metadium.did.resolver.domain.entity.PublicKey
 import io.omnipede.metadium.did.resolver.domain.ports.NotFoundIdentityException
 import io.omnipede.metadium.did.resolver.system.util.toNormalizedHex
 import org.springframework.stereotype.Service
+import java.util.*
 import java.util.stream.Collectors
 
 @Service
@@ -25,8 +26,10 @@ internal class MetadiumContractService(
      */
     override fun findPublicKeyList(metaDID: MetadiumDID): Either<NotFoundIdentityException, List<PublicKey>> {
 
+        // Find associated address and resolver address of meta DID
         val ( associatedAddresses, identityResolverAddresses ) = findAddressesOfAssociatedAndResolver(metaDID)
 
+        // Find valid contracts using resolver address
         val ( publicKeyContracts, serviceKeyContracts ) = try {
             findValidContracts(identityResolverAddresses)
         } catch (e: NotFoundIdentityException) {
@@ -133,18 +136,34 @@ internal class MetadiumContractService(
     private fun findPublicKeyList(metadiumDID: MetadiumDID, associatedAddresses: List<String>, publicKeyContracts: List<PublicKeyResolver>): List<PublicKey> {
         // For each associated address,
         return associatedAddresses.parallelStream().map { associatedAddress ->
-            // For each public key resolver contract
-            publicKeyContracts.parallelStream().map { publicKeyContract ->
-                val publicKeyHexBytes: ByteArray = publicKeyContract.getPublicKey(associatedAddress).send()
-                // Byte array to hex string
-                val publicKeyHex = publicKeyHexBytes.joinToString("") {
-                    "%02x".format(it)
-                }.toNormalizedHex()
-                if (publicKeyHex.isEmpty())
-                    PublicKey(did = metadiumDID.toString(), keyId = publicKeySymbol, address = associatedAddress)
-                else
-                    PublicKey(did = metadiumDID.toString(), keyId = publicKeySymbol, address = associatedAddress, publicKey = publicKeyHex)
-            }.collect(Collectors.toList())
-        }.collect(Collectors.toList()).flatten()
+            val publicKey = PublicKey(did = metadiumDID.toString(), keyId = publicKeySymbol, address = associatedAddress)
+            // Find public key hex from public key resolver contracts
+            val optionalPublicKeyHex = findPublicKeyHex(publicKeyContracts, associatedAddress)
+            // If public key hex exists,
+            if (optionalPublicKeyHex.isPresent)
+                publicKey.publicKeyHex = optionalPublicKeyHex.get()
+            publicKey
+        }.collect(Collectors.toList())
+    }
+
+    /**
+     * Public key resolver contract 리스트 상에서 associated address 를 이용해 public key hex 를 찾는 메소드
+     * @param publicKeyContracts Public key hex 가 존재할지도 모르는 contract 리스트
+     * @param associatedAddress Public key hex 를 찾을 때 사용할 address
+     * @return Public key hex optional wrapper
+     */
+    private fun findPublicKeyHex(publicKeyContracts: List<PublicKeyResolver>, associatedAddress: String): Optional<String> {
+
+        // 각 contract 을 돌며 확인한다
+        for (publicKeyContract in publicKeyContracts) {
+            val publicKeyHexBytes: ByteArray = publicKeyContract.getPublicKey(associatedAddress).send()
+            // Byte array to string
+            val publicKeyHex = publicKeyHexBytes.joinToString("") {
+                "%02x".format(it)
+            }.toNormalizedHex()
+            if (publicKeyHex.isNotEmpty())
+                return Optional.of(publicKeyHex)
+        }
+        return Optional.empty()
     }
 }
