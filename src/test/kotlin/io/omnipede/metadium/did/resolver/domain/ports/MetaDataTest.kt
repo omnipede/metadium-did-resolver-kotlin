@@ -1,4 +1,4 @@
-package io.omnipede.metadium.did.resolver.application
+package io.omnipede.metadium.did.resolver.domain.ports
 
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.DisplayName

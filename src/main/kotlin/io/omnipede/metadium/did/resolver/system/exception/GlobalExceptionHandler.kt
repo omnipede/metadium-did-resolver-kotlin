@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.servlet.NoHandlerFoundException
 import javax.servlet.http.HttpServletRequest
+import javax.validation.ConstraintViolationException
 
 /**
  * Servlet 내부에서 발생할 수 있는 general 한 exception 들을 처리하고, 클라이언트 단으로
@@ -34,6 +35,15 @@ internal class GlobalExceptionHandler {
         val fieldError = e.bindingResult.fieldError
         val message: String = fieldError!!.field + ": " + fieldError.defaultMessage
         return createResponseEntityAndLogError(errorCode, message, e)
+    }
+
+    /**
+     * Controller 의 path variable 또는 query parameter validation 에러가 발생하는 경우
+     */
+    @ExceptionHandler(ConstraintViolationException::class)
+    fun handleConstraintViolationException(e: ConstraintViolationException): ResponseEntity<RestError?> {
+        val errorCode = ErrorCode.BAD_REQUEST
+        return createResponseEntityAndLogError(errorCode, e.message!!, e)
     }
 
     /**
@@ -93,6 +103,13 @@ internal class GlobalExceptionHandler {
         return createResponseEntityAndLogError(errorCode, message!!, e)
     }
 
+    @ExceptionHandler(SystemException::class)
+    fun handleSystemException(e: SystemException): ResponseEntity<RestError?> {
+        val errorCode = e.errorCode
+        val message = e.message
+        return createResponseEntityAndLogError(errorCode, message!!, e)
+    }
+
     /**
      * 그 외 서버 에러 발생 시
      */
@@ -100,7 +117,7 @@ internal class GlobalExceptionHandler {
     fun handleException(e: Exception): ResponseEntity<RestError?> {
         val errorCode = ErrorCode.INTERNAL_SERVER_ERROR
         val message = e.message ?: errorCode.defaultMessage
-        return createResponseEntityAndLogError(errorCode, message, e)
+        return createResponseEntityAndLogError(errorCode, "${e.javaClass.canonicalName}: $message", e)
     }
 
     /**

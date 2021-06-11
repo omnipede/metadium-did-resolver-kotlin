@@ -1,14 +1,9 @@
-package io.omnipede.metadium.did.resolver.domain
+package io.omnipede.metadium.did.resolver.domain.entity
 
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.assertj.core.api.AssertionsForInterfaceTypes.catchThrowable
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.MethodSource
-import org.junit.jupiter.params.provider.ValueSource
-import java.util.stream.Stream
 
 internal class PublicKeyTest {
 
@@ -22,6 +17,7 @@ internal class PublicKeyTest {
 
         // When
         val publicKey = PublicKey(did=did, keyId=keyId, address=address)
+        publicKey.publicKeyHex = null
 
         // Then
         assertThat(publicKey).isNotNull
@@ -42,15 +38,16 @@ internal class PublicKeyTest {
         val publicKeyHex = "0X48f78d9ef20ede7f29702b6c30236482e35528adb1be25e0cea5c55a6337b0adc3e9d12c75bb46e6b7a589c7cd538a9d47a1cadca37286d249be01b83a95db83"
 
         // When
-        val publicKey = PublicKey(did=did, keyId=keyId, address=address, publicKey=publicKeyHex)
+        val publicKey = PublicKey(did=did, keyId=keyId, address=address)
+        publicKey.publicKeyHex = publicKeyHex
 
         // Then
         assertThat(publicKey).isNotNull
         assertThat(publicKey.type).isEqualTo("EcdsaSecp256k1VerificationKey2019")
         assertThat(publicKey.controller).isEqualTo(did)
-        assertThat(publicKey.publicKeyHash).isEqualTo(address.toLowerCase())
+        assertThat(publicKey.publicKeyHash).isNull()
         assertThat(publicKey.id).isEqualTo("$did#$keyId#${address.toLowerCase()}")
-        assertThat(publicKey.publicKeyHex).isEqualTo(publicKeyHex.substring(2).toLowerCase())
+        assertThat(publicKey.publicKeyHex).isEqualTo("04" + publicKeyHex.substring(2).toLowerCase())
     }
 
     @Test
@@ -60,11 +57,10 @@ internal class PublicKeyTest {
         val did = "did:Zeta:000000000000000000000000000000000000000000000000000000000000112b"
         val keyId = "Testing"
         val address = "0c65a336fc97d4cf830baeb739153f312cbefcc9"
-        val publicKeyHex = "0c65a336fc97d4cf830baeb739153f312cbefcc9"
 
         // When
         val throwable: Throwable? = catchThrowable {
-            PublicKey(did=did, keyId=keyId, address=address, publicKey=publicKeyHex)
+            PublicKey(did=did, keyId=keyId, address=address)
         }
 
         // Then
@@ -80,11 +76,10 @@ internal class PublicKeyTest {
         val did = "did:meta:000000000000000000000000000000000000000000000000000000000000112b"
         val keyId = "Testing"
         val address = "c"
-        val publicKeyHex = "0c65a336fc97d4cf830baeb739153f312cbefcc9"
 
         // When
         val throwable: Throwable? = catchThrowable {
-            PublicKey(did=did, keyId=keyId, address=address, publicKey=publicKeyHex)
+            PublicKey(did=did, keyId=keyId, address=address)
         }
 
         // Then
@@ -100,16 +95,17 @@ internal class PublicKeyTest {
         val did = "did:meta:000000000000000000000000000000000000000000000000000000000000112b"
         val keyId = "Testing"
         val address = "0c65a336fc97d4cf830baeb739153f312cbefcc9"
-        val publicKey = "c"
+        val publicKeyHex = "c"
 
         // When
         val throwable: Throwable? = catchThrowable {
-            PublicKey(did=did, keyId=keyId, address=address, publicKey=publicKey)
+            val publicKey = PublicKey(did=did, keyId=keyId, address=address)
+            publicKey.publicKeyHex = publicKeyHex
         }
 
         // Then
         assertThat(throwable).isNotNull
         assertThat(throwable).isInstanceOf(IllegalArgumentException::class.java)
-        assertThat(throwable).hasMessageContaining("Invalid public key hex format: $publicKey")
+        assertThat(throwable).hasMessageContaining("Invalid public key hex format: $publicKeyHex")
     }
 }

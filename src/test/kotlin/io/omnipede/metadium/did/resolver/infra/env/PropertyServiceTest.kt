@@ -1,6 +1,6 @@
 package io.omnipede.metadium.did.resolver.infra.env
 
-import io.omnipede.metadium.did.resolver.domain.PublicKey
+import io.omnipede.metadium.did.resolver.domain.entity.PublicKey
 import io.omnipede.metadium.did.resolver.system.config.IdentityHubProperty
 import io.omnipede.metadium.did.resolver.system.config.MetadiumConfigProperty
 import io.omnipede.metadium.did.resolver.system.config.ResolverProperty
@@ -32,35 +32,21 @@ internal class PropertyServiceTest {
     }
 
     @Nested
-    @DisplayName("isSameNetwork()")
+    @DisplayName("getNetwork()")
     inner class IsSameNetworkTest {
 
         @Test
-        @DisplayName("동일 네트워크일 경우 true 반환")
-        fun ifSameNetwork() {
+        @DisplayName("올바른 network 변수 값을 가져오는지 확인")
+        fun getNetwork() {
 
             // Given
 
             // When
-           val result = propertyService?.isSameNetwork("mainnet")
+           val result = propertyService?.getNetwork()
 
             // Then
             assertThat(result).isNotNull
-            assertThat(result).isTrue
-        }
-
-        @Test
-        @DisplayName("다른 네트워크일 경우 false 반환")
-        fun ifDifferentNetwork() {
-
-            // Given
-
-            // When
-            val result = propertyService?.isSameNetwork("testnet")
-
-            // Then
-            assertThat(result).isNotNull
-            assertThat(result).isFalse
+            assertThat(result).isEqualTo(metadiumConfigProperty.network)
         }
     }
 

@@ -1,4 +1,4 @@
-package io.omnipede.metadium.did.resolver.domain
+package io.omnipede.metadium.did.resolver.domain.entity
 
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.assertj.core.api.AssertionsForInterfaceTypes.catchThrowable

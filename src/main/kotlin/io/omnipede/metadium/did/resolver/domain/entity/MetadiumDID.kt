@@ -1,7 +1,8 @@
-package io.omnipede.metadium.did.resolver.domain
+package io.omnipede.metadium.did.resolver.domain.entity
 
 import io.omnipede.metadium.did.resolver.system.util.isValidDid
 import java.lang.IllegalArgumentException
+import java.math.BigInteger
 
 /**
  * DID 문자열 클래스
@@ -16,7 +17,10 @@ class MetadiumDID(did: String) {
         private set
 
     // Metadium ID
-    lateinit var metaId: String
+    private lateinit var metaId: String
+
+    // Metadium EIN
+    var ein: BigInteger
         private set
 
     private val sep: String = ":"
@@ -40,6 +44,8 @@ class MetadiumDID(did: String) {
             net = words[2]
             metaId = words[3]
         }
+
+        ein = metaId.toBigInteger(16)
     }
 
     /**

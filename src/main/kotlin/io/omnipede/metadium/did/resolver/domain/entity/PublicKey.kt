@@ -1,4 +1,4 @@
-package io.omnipede.metadium.did.resolver.domain
+package io.omnipede.metadium.did.resolver.domain.entity
 
 import io.omnipede.metadium.did.resolver.system.util.*
 import io.omnipede.metadium.did.resolver.system.util.isValidDid
@@ -12,10 +12,23 @@ class PublicKey(did: String, keyId: String, address: String) {
 
     val type: String = "EcdsaSecp256k1VerificationKey2019"
     val controller: String = did
-    val publicKeyHash: String = address.toNormalizedHex()
-    val id: String = "$did#$keyId#$publicKeyHash"
-    var publicKeyHex: String? = null
+    var publicKeyHash: String? = address.toNormalizedHex()
         private set
+    val id: String = "$did#$keyId#$publicKeyHash"
+
+    // Public key hex 를 세팅할 경우, public key hash 는 null 이 되어야 한다
+    var publicKeyHex: String? = null
+        set(value) {
+            // String validation
+            value?.let {
+                if(!it.isValidMetadiumPublicKeyHex())
+                    throw IllegalArgumentException("Invalid public key hex format: $it")
+                publicKeyHash = null
+
+                // "04" 를 앞에 붙여준다
+                field = "04" + value.toNormalizedHex()
+            }
+        }
 
     init {
         // String validation
@@ -23,13 +36,5 @@ class PublicKey(did: String, keyId: String, address: String) {
             throw IllegalArgumentException("Invalid DID format: $did")
         if (!address.isValidMetadiumAddress())
             throw IllegalArgumentException("Invalid address format: $address")
-    }
-
-    constructor(did: String, keyId: String, address: String, publicKey: String): this(did, keyId, address) {
-        // String validation
-        if (!publicKey.isValidMetadiumPublicKeyHex())
-            throw IllegalArgumentException("Invalid public key hex format: $publicKey")
-        // Address 에서 0x prefix 를 삭제하고 lower case 로 만든다.
-        this.publicKeyHex = publicKey.toNormalizedHex()
     }
 }

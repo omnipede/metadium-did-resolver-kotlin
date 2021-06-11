@@ -1,4 +1,4 @@
-package io.omnipede.metadium.did.resolver.application
+package io.omnipede.metadium.did.resolver.domain.ports
 
 import java.util.*
 
