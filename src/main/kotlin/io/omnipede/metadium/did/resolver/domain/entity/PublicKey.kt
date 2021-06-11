@@ -22,7 +22,7 @@ class PublicKey(did: String, keyId: String, address: String) {
             // String validation
             value?.let {
                 if(!it.isValidMetadiumPublicKeyHex())
-                    throw IllegalArgumentException("Invalid public key hex format: $field")
+                    throw IllegalArgumentException("Invalid public key hex format: $it")
                 publicKeyHash = null
 
                 // "04" 를 앞에 붙여준다
