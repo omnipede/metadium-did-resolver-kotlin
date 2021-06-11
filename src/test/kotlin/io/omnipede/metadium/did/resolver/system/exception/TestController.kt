@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.Range
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
+import kotlin.jvm.Throws
 
 /**
  * Exception handler test 용 HTTP controller
@@ -14,6 +15,7 @@ import javax.validation.Valid
 internal class TestController {
 
     @GetMapping(value = ["/temp"], headers = ["content-type=application/json"])
+    @Throws(Exception::class)
     fun get(@RequestParam @Range(min=0, max=10) id: Int): String {
         if (id == 0)
             throw Exception()
