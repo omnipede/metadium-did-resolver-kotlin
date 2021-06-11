@@ -21,6 +21,7 @@ class MetadiumDID(did: String) {
 
     // Metadium EIN
     var ein: BigInteger
+        private set
 
     private val sep: String = ":"
 
