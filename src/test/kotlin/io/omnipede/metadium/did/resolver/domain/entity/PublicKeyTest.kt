@@ -17,6 +17,7 @@ internal class PublicKeyTest {
 
         // When
         val publicKey = PublicKey(did=did, keyId=keyId, address=address)
+        publicKey.publicKeyHex = null
 
         // Then
         assertThat(publicKey).isNotNull
