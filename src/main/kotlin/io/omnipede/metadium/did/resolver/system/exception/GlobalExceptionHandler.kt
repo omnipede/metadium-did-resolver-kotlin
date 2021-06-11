@@ -100,7 +100,7 @@ internal class GlobalExceptionHandler {
     fun handleException(e: Exception): ResponseEntity<RestError?> {
         val errorCode = ErrorCode.INTERNAL_SERVER_ERROR
         val message = e.message ?: errorCode.defaultMessage
-        return createResponseEntityAndLogError(errorCode, message, e)
+        return createResponseEntityAndLogError(errorCode, "${e.javaClass.canonicalName}: $message", e)
     }
 
     /**
