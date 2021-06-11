@@ -1,17 +1,20 @@
 package io.omnipede.metadium.did.resolver.system.exception
 
+import org.hibernate.validator.constraints.Range
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
-import javax.validation.constraints.Max
 
 /**
  * Exception handler test 용 HTTP controller
  */
 @RestController
-internal class TempController {
+@RequestMapping("/api/v1")
+@Validated
+internal class TestController {
 
-    @GetMapping(value = ["/api/v1/temp"], headers = ["content-type=application/json"])
-    fun get(@Valid @RequestParam @Max(1024) id: Int): String {
+    @GetMapping(value = ["/temp"], headers = ["content-type=application/json"])
+    fun get(@RequestParam @Range(min=0, max=10) id: Int): String {
         if (id == 0)
             throw Exception()
         if (id == 1)
@@ -23,8 +26,8 @@ internal class TempController {
         return "Hello world $id"
     }
 
-    @PostMapping("/api/v1/temp")
-    fun post(@Valid @RequestBody dto: TempRequestDTO): String {
+    @PostMapping("/temp")
+    fun post(@Valid @RequestBody dto: TestRequestDTO): String {
         return dto.a ?: "Hello world"
     }
 }
