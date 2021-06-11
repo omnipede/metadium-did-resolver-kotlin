@@ -145,6 +145,31 @@ internal class GlobalExceptionHandlerTest {
     }
 
     @Test
+    @DisplayName("SystemException 헨들링 테스트")
+    fun handle_SystemException_test() {
+
+        // Given
+
+        // When
+        mockMvc!!.perform(
+            get("/api/v1/temp?id=2")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            // Then
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+
+        // When
+        mockMvc!!.perform(
+            get("/api/v1/temp?id=3")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            // Then
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+    }
+
+    @Test
     @DisplayName("Exception 헨들링 테스트")
     fun handle_Exception_test() {
         // Given

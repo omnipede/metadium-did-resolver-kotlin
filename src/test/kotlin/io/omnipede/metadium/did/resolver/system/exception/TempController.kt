@@ -16,11 +16,15 @@ internal class TempController {
             throw Exception()
         if (id == 1)
             throw Exception("My custom error")
+        if (id == 2)
+            throw SystemException(ErrorCode.BAD_REQUEST)
+        if (id == 3)
+            throw SystemException(ErrorCode.BAD_REQUEST, "Bad request!")
         return "Hello world $id"
     }
 
     @PostMapping("/api/v1/temp")
     fun post(@Valid @RequestBody dto: TempRequestDTO): String {
-        return "Hello world"
+        return dto.a ?: "Hello world"
     }
 }

@@ -93,6 +93,13 @@ internal class GlobalExceptionHandler {
         return createResponseEntityAndLogError(errorCode, message!!, e)
     }
 
+    @ExceptionHandler(SystemException::class)
+    fun handleSystemException(e: SystemException): ResponseEntity<RestError?> {
+        val errorCode = e.errorCode
+        val message = e.message
+        return createResponseEntityAndLogError(errorCode, message!!, e)
+    }
+
     /**
      * 그 외 서버 에러 발생 시
      */
