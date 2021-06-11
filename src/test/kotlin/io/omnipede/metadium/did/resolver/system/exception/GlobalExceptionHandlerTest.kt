@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -21,11 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import org.springframework.validation.beanvalidation.MethodValidationPostProcessor
 import org.springframework.web.context.WebApplicationContext
-import org.springframework.web.servlet.config.annotation.EnableWebMvc
-import javax.validation.Validation
-import javax.validation.ValidatorFactory
 
 @ExtendWith(SpringExtension::class)
 // 테스트할 때 사용할 context configuration
@@ -231,6 +225,26 @@ internal class GlobalExceptionHandlerTest {
         )
             // Then
             .andExpect(status().isInternalServerError)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andReturn()
+    }
+
+    @Test
+    @DisplayName("Log 레벨이 DEBUG 일 경우")
+    fun when_log_level_is_debug() {
+
+        // Given
+        val loggerContext: LoggerContext = LoggerFactory.getILoggerFactory() as LoggerContext
+        val logger: Logger = loggerContext.getLogger(GlobalExceptionHandler::class.java)
+        logger.level = Level.DEBUG
+
+        // When
+        mockMvc!!.perform(
+            get("/api/v1/temp")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            // Then
+            .andExpect(status().isBadRequest)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andReturn()
     }
