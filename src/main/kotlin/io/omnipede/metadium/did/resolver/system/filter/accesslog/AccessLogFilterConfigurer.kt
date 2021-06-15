@@ -12,4 +12,20 @@ class AccessLogFilterConfigurer(
 
     // Request, response body 를 로그로 남길지 여부
     var enableContentLogging: Boolean = false,
-)
+) {
+    fun isWhiteListed(requestUri: String): Boolean {
+        // 설정 로드
+        val whiteList = whiteList ?: return false
+
+        // White list 상에서 request uri 가 존재하는지 확인
+        val findResult = whiteList
+            .stream().filter { prefix: String? ->
+                requestUri.startsWith(prefix!!)
+            }
+            .findFirst()
+            .orElse(null)
+
+        // 존재하면 true 반환
+        return findResult != null
+    }
+}

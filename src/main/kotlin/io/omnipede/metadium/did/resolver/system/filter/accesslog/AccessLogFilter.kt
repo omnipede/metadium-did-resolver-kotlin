@@ -39,7 +39,7 @@ class AccessLogFilter(
     ) {
 
         // White list 된 request URI 일 경우 pass 처리
-        if (isWhiteListed(httpServletRequest.requestURI)) {
+        if (accessLogFilterConfigurer.isWhiteListed(httpServletRequest.requestURI)) {
             filterChain.doFilter(httpServletRequest, httpServletResponse)
             return
         }
@@ -53,27 +53,6 @@ class AccessLogFilter(
 
         // Else, request response body 를 로그에 남기지 않음
         processAccessLogWithoutContents(httpServletRequest, httpServletResponse, filterChain)
-    }
-
-    /**
-     * 요청 URI 가 white list 된 URI 인지 확인하는 메소드
-     * @param requestUri 요청 URI
-     * @return White list 여부
-     */
-    private fun isWhiteListed(requestUri: String): Boolean {
-        // 설정 로드
-        val whiteList = accessLogFilterConfigurer.whiteList ?: return false
-
-        // White list 상에서 request uri 가 존재하는지 확인
-        val findResult = whiteList
-            .stream().filter { prefix: String? ->
-                requestUri.startsWith(prefix!!)
-            }
-            .findFirst()
-            .orElse(null)
-
-        // 존재하면 true 반환
-        return findResult != null
     }
 
     /**
@@ -210,6 +189,7 @@ class AccessLogFilter(
 
         val httpXForwardedFor = httpServletRequest.getHeader("HTTP_X_FORWARDED_FOR")
         return if (isValidIp(httpXForwardedFor)) httpXForwardedFor
+        
         // 그 외의 경우, proxy 되지 않았다고 판단하여 getRemoteAddr() 메소드로 IP 주소를 가져옴.
         else
             httpServletRequest.remoteAddr

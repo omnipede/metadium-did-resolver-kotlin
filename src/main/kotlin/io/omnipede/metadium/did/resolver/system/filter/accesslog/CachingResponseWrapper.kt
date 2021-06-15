@@ -5,7 +5,6 @@ import org.springframework.mock.web.DelegatingServletOutputStream
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 import java.io.PrintWriter
-import java.nio.charset.StandardCharsets
 import javax.servlet.ServletOutputStream
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpServletResponseWrapper
