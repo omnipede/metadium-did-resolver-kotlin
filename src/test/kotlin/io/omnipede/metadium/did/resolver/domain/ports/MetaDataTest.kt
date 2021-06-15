@@ -88,7 +88,7 @@ internal class MetaDataTest {
         }
 
         @Test
-        @DisplayName("")
+        @DisplayName("MetaData.endResolving() 메소드는 resolve duration 을 정확히 측정해야한다")
         fun endResolving_method_test() {
 
             // Given
