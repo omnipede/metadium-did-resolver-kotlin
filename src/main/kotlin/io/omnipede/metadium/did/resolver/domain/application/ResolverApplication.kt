@@ -34,7 +34,7 @@ class ResolverApplication(
         val metadiumDID = MetadiumDID(did)
 
         // Check whether requested did is inside same network with this resolver
-        val currentNetwork = envService.getNetwork()
+        val currentNetwork = metaData.methodMetaData.network
         if (currentNetwork != metadiumDID.net)
             return Either.Left(ResolverError.DifferentNetwork("This server is DID resolver for $currentNetwork"))
 

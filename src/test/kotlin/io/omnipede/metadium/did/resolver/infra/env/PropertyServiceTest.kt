@@ -32,25 +32,6 @@ internal class PropertyServiceTest {
     }
 
     @Nested
-    @DisplayName("getNetwork()")
-    inner class IsSameNetworkTest {
-
-        @Test
-        @DisplayName("올바른 network 변수 값을 가져오는지 확인")
-        fun getNetwork() {
-
-            // Given
-
-            // When
-           val result = propertyService?.getNetwork()
-
-            // Then
-            assertThat(result).isNotNull
-            assertThat(result).isEqualTo(metadiumConfigProperty.network)
-        }
-    }
-
-    @Nested
     @DisplayName("createService()")
     inner class CreateService {
 
