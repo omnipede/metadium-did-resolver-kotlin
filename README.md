@@ -80,7 +80,7 @@ DID 에 대한 did document 가 존재하지 않을 때 발생
 * Build
 
 ```
-$ ./gradlew build
+$ ./gradlew clean build
 ```
 
 * Test
