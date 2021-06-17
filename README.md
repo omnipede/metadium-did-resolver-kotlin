@@ -15,7 +15,7 @@
 ```
 $ docker run -d -p 3030:3030 \
   --name=did-resolver \
-omnipede/metadium-did-resolver:0.1.1
+omnipede/metadium-did-resolver:latest
 ```
 
 세부 설정을 수정하고 싶다면 먼저 설정 파일을 생성해야 한다. [설정](./docs/config.md) 문서를 읽고 적절한 위치에 설정 파일을 생성하고 해당 설정 파일의
@@ -25,7 +25,7 @@ omnipede/metadium-did-resolver:0.1.1
 $ docker run -d -p 3030:3030 \
   --name=did-resolver \
   -v /path/to/config:/app/resources \
-omnipede/metadium-did-resolver:0.1.1
+omnipede/metadium-did-resolver:latest
 ```
 
 ## API spec
