@@ -5,17 +5,24 @@ package io.omnipede.metadium.did.resolver.system.filter.accesslog
  */
 class AccessLogFilterConfigurer(
     // 로그를 남기지 않을 URI 리스트
-    var whiteList: List<String>? = null,
+    private var whiteList: List<String> = emptyList(),
 
     // Maximum request, response contents length
-    var maxContentLength: Int = 1024,
+    val maxContentLength: Int = 1024,
 
     // Request, response body 를 로그로 남길지 여부
-    var enableContentLogging: Boolean = false,
+    val enableContentLogging: Boolean = false,
 ) {
+
+    // Maximum content logging size is 1GB
+    private val limit = 1024 * 1024 * 1024
+
+    init {
+        if (maxContentLength > limit)
+            throw IllegalArgumentException("maxContentLength should not be larger than $limit")
+    }
+
     fun isWhiteListed(requestUri: String): Boolean {
-        // 설정 로드
-        val whiteList = whiteList ?: return false
 
         // White list 상에서 request uri 가 존재하는지 확인
         val findResult = whiteList
