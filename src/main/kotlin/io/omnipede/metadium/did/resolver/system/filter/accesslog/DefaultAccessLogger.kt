@@ -14,7 +14,7 @@ class DefaultAccessLogger  {
     private val objectMapper = ObjectMapper()
 
     fun log(accessLog: AccessLog?) {
-        val message = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(accessLog)
+        val message = objectMapper.writeValueAsString(accessLog)
         logger.info(message)
     }
 
