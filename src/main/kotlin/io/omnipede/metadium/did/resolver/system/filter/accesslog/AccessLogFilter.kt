@@ -16,14 +16,13 @@ import kotlin.collections.LinkedHashMap
  */
 class AccessLogFilter(
     // Access log filter configuration
-    private var accessLogFilterConfigurer: AccessLogFilterConfigurer
+    private var accessLogFilterConfigurer: AccessLogFilterConfigurer,
+    // 실제 access log 를 남길 시 사용하는 인터페이스
+    private var accessLogger: DefaultAccessLogger
 ) : OncePerRequestFilter() {
 
     // User agent 분석 시 사용하는 객체
     private val userAgentService: UserAgentService = UserAgentService()
-
-    // 실제 access log 를 남길 시 사용하는 인터페이스
-    private var accessLogger: DefaultAccessLogger = DefaultAccessLogger()
 
     // 서버 host name
     private val hostName = HostName()
@@ -128,7 +127,7 @@ class AccessLogFilter(
         // User-Agent 분석
         var userAgent = httpServletRequest.getHeader("User-Agent")
         if (userAgent == null) userAgent = "Unknown"
-        val deviceClass: String = userAgentService.getDeviceClass(userAgent) ?: "Unknown device"
+        val deviceClass: String = userAgentService.getDeviceClass(userAgent)
 
         // Request
         // IP address
@@ -189,7 +188,7 @@ class AccessLogFilter(
 
         val httpXForwardedFor = httpServletRequest.getHeader("HTTP_X_FORWARDED_FOR")
         return if (isValidIp(httpXForwardedFor)) httpXForwardedFor
-        
+
         // 그 외의 경우, proxy 되지 않았다고 판단하여 getRemoteAddr() 메소드로 IP 주소를 가져옴.
         else
             httpServletRequest.remoteAddr
