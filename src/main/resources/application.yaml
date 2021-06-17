@@ -10,12 +10,6 @@ spring:
 
 server:
   port: 3030
-  servlet:
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
-      force-response: true
 
 # Logging config
 logging:
