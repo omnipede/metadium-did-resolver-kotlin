@@ -18,8 +18,7 @@ internal class UserAgentService {
      * @param userAgent User-Agent header value
      * @return Device class
      */
-    fun getDeviceClass(userAgent: String?): String? {
-        if (userAgent == null || userAgent.isEmpty()) return null
+    fun getDeviceClass(userAgent: String): String {
         val parsedUserAgent: UserAgent = uaa.parse(userAgent)
         return parsedUserAgent.getValue("DeviceClass")
     }

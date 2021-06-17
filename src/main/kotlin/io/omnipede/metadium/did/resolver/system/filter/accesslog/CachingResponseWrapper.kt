@@ -23,8 +23,4 @@ class CachingResponseWrapper(
     override fun getOutputStream(): ServletOutputStream {
         return DelegatingServletOutputStream(TeeOutputStream(super.getOutputStream(), printStream))
     }
-
-    override fun getWriter(): PrintWriter {
-        return PrintWriter(DelegatingServletOutputStream(TeeOutputStream(super.getOutputStream(), printStream)))
-    }
 }
