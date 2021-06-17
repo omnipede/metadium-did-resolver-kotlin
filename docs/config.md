@@ -1,3 +1,8 @@
+# Configuration
+
+## 설정 예시
+
+```
 spring:
   application:
     name: "metadium-did-resolver"
@@ -13,6 +18,10 @@ server:
 
 # Logging config
 logging:
+#  file:
+#    path: "./log"
+#    max-size: 10MB
+#    max-history: 30
   level:
     # Change below to change application logging level
     io.omnipede.metadium.did.resolver: INFO
@@ -34,3 +43,18 @@ metadium:
     - "0xd9f39ab902f835400cfb424529bb0423d7342331"
   serviceKeyResolver-address-list:
     - "0x5d4b8c6c6abecf9b5277747fa15980b964c40ce3"
+
+```
+
+## 설정 값에 대한 설명
+
+* ```spring.*``` Normal spring boot configuration
+* ```logging.file``` 파일에 로깅하고 싶다면 사용
+* ```logging.level``` 로그 레벨 수정시 이 부분을 수정한다
+* ```identityHub.*``` Identity hub service 설정
+* ```metadium```
+    * ```.network``` 'mainnet' or 'testnet' 만 가능하다
+    * ```http-provider``` metadium 블록체인의 http provider 주소
+    * ```identityRegistry-address``` IdentityRegistry 스마트 컨트랙트의 주소
+    * ```publicKeyResolver-address-list``` PublicKeyResolver 스마트 컨트랙트들의 주소
+    * ```serviceKeyResolver-address-list``` ServiceKeyResolver 스마트 컨트랙트들의 주소
