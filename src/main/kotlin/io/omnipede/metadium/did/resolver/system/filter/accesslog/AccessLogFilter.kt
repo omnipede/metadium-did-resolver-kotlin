@@ -75,7 +75,7 @@ class AccessLogFilter(
 
         // 응답 시각
         val responseAt = Date()
-        val accessLog = createAccessLog(requestWrapper, httpServletResponse, requestAt, responseAt)
+        val accessLog = createAccessLog(requestWrapper, responseWrapper, requestAt, responseAt)
 
         // Body 추출
         val requestBody = requestWrapper.getBody(accessLogFilterConfigurer.maxContentLength)
