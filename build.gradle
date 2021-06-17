@@ -28,7 +28,6 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-undertow', version: '2.5.0'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    compileOnly group: 'org.springframework', name: 'spring-mock', version: '2.0.8'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib'
     implementation group: 'org.web3j', name: 'core', version: '4.8.4'
     implementation group: 'commons-validator', name: 'commons-validator', version: '1.7'
