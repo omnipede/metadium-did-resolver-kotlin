@@ -53,7 +53,6 @@ internal class GlobalExceptionHandler {
     @ExceptionHandler(MissingServletRequestParameterException::class)
     fun handleMissingServletRequestParameterException(
         e: MissingServletRequestParameterException,
-        request: HttpServletRequest?
     ): ResponseEntity<RestError?> {
         val errorCode = ErrorCode.BAD_REQUEST
         val message = "Query error: " + e.parameterName + ": " + e.message
