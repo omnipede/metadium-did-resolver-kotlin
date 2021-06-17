@@ -16,7 +16,7 @@ internal class CachingRequestWrapper(request: HttpServletRequest?) : HttpServlet
     @Throws(IOException::class)
     override fun getInputStream(): ServletInputStream {
         val bis = ByteArrayInputStream(contentsAsByteArray)
-        return ContentCachingWrapperInputStream(bis)
+        return CachingInputStream(bis)
     }
 
     @Throws(IOException::class)
@@ -33,7 +33,7 @@ internal class CachingRequestWrapper(request: HttpServletRequest?) : HttpServlet
         )
     }
 
-    private class ContentCachingWrapperInputStream(bis: InputStream) : ServletInputStream() {
+    private class CachingInputStream(bis: InputStream) : ServletInputStream() {
         private val `is`: InputStream = bis
 
         override fun isFinished(): Boolean {
@@ -44,7 +44,7 @@ internal class CachingRequestWrapper(request: HttpServletRequest?) : HttpServlet
             return true
         }
 
-        override fun setReadListener(readListener: ReadListener) {
+        override fun setReadListener(readListener: ReadListener?) {
             throw RuntimeException("Not implemented yet")
         }
 

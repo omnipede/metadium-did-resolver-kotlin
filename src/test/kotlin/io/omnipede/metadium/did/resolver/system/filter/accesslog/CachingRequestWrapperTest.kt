@@ -89,22 +89,9 @@ internal class CachingRequestWrapperTest {
         // When
         val httpServletRequest: HttpServletRequest = contentCachingRequestWrapper
         val inputStream = httpServletRequest.inputStream
-        val readListener: ReadListener = object: ReadListener {
-            override fun onDataAvailable() {
-                TODO("Not yet implemented")
-            }
-
-            override fun onAllDataRead() {
-                TODO("Not yet implemented")
-            }
-
-            override fun onError(t: Throwable?) {
-                TODO("Not yet implemented")
-            }
-        }
 
         val throwable = catchThrowable {
-            inputStream.setReadListener(readListener)
+            inputStream.setReadListener(null)
         }
 
         // Then

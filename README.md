@@ -74,13 +74,13 @@ DID 에 대한 did document 가 존재하지 않을 때 발생
 ```
 
 ## Development requirements
-* \> JAVA 8
+* \>= JAVA 8
 
 ## Build, test, run
 * Build
 
 ```
-$ ./gradlew build
+$ ./gradlew clean build
 ```
 
 * Test
