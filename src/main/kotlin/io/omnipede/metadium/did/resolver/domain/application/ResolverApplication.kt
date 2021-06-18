@@ -58,13 +58,21 @@ class ResolverApplication(
      * @param did DID for document
      * @return 캐시된 document 가 없으면 false 를 반환하고 삭제에 성공하면 true 를 반환한다
      */
-    fun deleteDocumentFromCache(did: String): Boolean {
+    fun deleteDocumentFromCache(did: String): Either<ResolverError, Boolean> {
+
+        // Create resolver meta data
+        val metaData = envService.loadMetaData()
 
         // FROM DID, get metaId
         val metadiumDID = MetadiumDID(did)
 
+        // Check whether requested did is inside same network with this resolver
+        val currentNetwork = metaData.methodMetaData.network
+        if (currentNetwork != metadiumDID.net)
+            return Either.Left(ResolverError.DifferentNetwork("This server is DID resolver for $currentNetwork"))
+
         // 캐시에서 삭제한다
-        return documentCache.delete(metadiumDID)
+        return Either.Right(documentCache.delete(metadiumDID))
     }
 
     /**
