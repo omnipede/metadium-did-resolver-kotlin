@@ -17,6 +17,12 @@ logging:
     # Change below to change application logging level
     io.omnipede.metadium.did.resolver: INFO
 
+cache:
+  # 단위: 초
+  duration: 600
+  # 캐시될 entry 개수
+  maximumSize: 10000
+
 resolver:
   driverId: "did-meta"
 
