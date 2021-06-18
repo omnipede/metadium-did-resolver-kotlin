@@ -118,7 +118,7 @@ internal class ResolverControllerTest {
             val result = resolverController!!.purge(did)
 
             // Then
-            assertThat(result["success"]).isEqualTo("true")
+            assertThat(result["success"]).isEqualTo(true)
 
             val message = if(cacheFound) {
                 "Cache purging of '${did}' has been completed"

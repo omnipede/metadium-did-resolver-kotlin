@@ -32,7 +32,7 @@ class ResolverController(
     @DeleteMapping("/{did}")
     fun purge(
         @PathVariable @MetadiumDID did: String
-    ): Map<String, String> {
+    ): Map<String, Any> {
 
         val cacheFound = resolverApplication.deleteDocumentFromCache(did)
             .getOrHandle {
@@ -41,12 +41,12 @@ class ResolverController(
 
         if (cacheFound)
             return mapOf(
-                "success" to "true",
+                "success" to true,
                  "message" to "Cache purging of '${did}' has been completed"
             )
 
         return mapOf(
-            "success" to "true",
+            "success" to true,
             "message" to "Not found DID data(${did}) in cache."
         )
     }
