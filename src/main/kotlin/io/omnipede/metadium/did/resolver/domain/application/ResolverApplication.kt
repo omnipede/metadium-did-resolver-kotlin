@@ -20,10 +20,11 @@ class ResolverApplication(
 ) {
     /**
      * DID 의 DID document 를 컨트랙으로부터 읽어서 반환하는 메소드
-     * @param did Metadium DID. But it should have valid DID format.
+     * @param did Metadium DID. But it should have valid DID format
+     * @param noCache 캐시 비활성화 여부
      * @return DID document and server meta data
      */
-    fun resolve(did: String): Either<ResolverError, Pair<DidDocument, MetaData>> {
+    fun resolve(did: String, noCache: Boolean): Either<ResolverError, Pair<DidDocument, MetaData>> {
 
         // Create resolver meta data
         val metaData = envService.loadMetaData()
@@ -36,17 +37,12 @@ class ResolverApplication(
         if (currentNetwork != metadiumDID.net)
             return Either.Left(ResolverError.DifferentNetwork("This server is DID resolver for $currentNetwork"))
 
-        // 먼저 캐시에서 document 를 찾는다
-        val cachedDocument = documentCache.find(metadiumDID)
-
-        // 찾는데 성공했다면 해당 document 를 반환
-        val document = if (cachedDocument.isPresent) {
-            // 메타데이타에 캐시되었음을 표기
-            metaData.markCached()
-            cachedDocument.get()
-        } else {
-            // 캐시 되지 않았다면 contract 에서 찾는다
+        // noCache 가 true 면 캐시를 조회하지 않고 직접 contract 에서 조회한다
+        val document = if (noCache) {
             resolveDocumentFromContract(metadiumDID)
+                .getOrHandle { return Either.Left(ResolverError.NotFoundIdentity(it.message!!)) }
+        } else {
+            resolveDocument(metadiumDID, metaData)
                 .getOrHandle { return Either.Left(ResolverError.NotFoundIdentity(it.message!!)) }
         }
 
@@ -72,8 +68,31 @@ class ResolverApplication(
     }
 
     /**
+     * DID document 를 반환하는 메소드. 만약 캐시된 document 가 있으면 캐시에서 찾고,
+     * 캐시된 document 가 없다면 contract 에서 직접 찾는다
+     * @param metadiumDID DID of document
+     * @param metaData Resolver 메타데이터 객체
+     */
+    private fun resolveDocument(metadiumDID: MetadiumDID, metaData: MetaData): Either<NotFoundIdentityException, DidDocument> {
+
+        // 먼저 캐시에서 document 를 찾는다
+        val cachedDocument = documentCache.find(metadiumDID)
+        // 찾는데 성공했다면 해당 document 를 반환
+        val document = if (cachedDocument.isPresent) {
+            // 메타데이타에 캐시되었음을 표기
+            metaData.markCached()
+            cachedDocument.get()
+        } else {
+            // 캐시 되지 않았다면 contract 에서 찾는다
+            resolveDocumentFromContract(metadiumDID)
+                .getOrHandle { return Either.Left(it) }
+        }
+        return Either.Right(document)
+    }
+
+    /**
      * DID 의 DID document 를 컨트랙으로부터 읽어서 반환하는 메소드
-     * @param did Metadium DID. But it should have valid DID format.
+     * @param metadiumDID Metadium DID. But it should have valid DID format.
      */
     private fun resolveDocumentFromContract(metadiumDID: MetadiumDID): Either<NotFoundIdentityException, DidDocument> {
 
