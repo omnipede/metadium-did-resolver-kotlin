@@ -18,7 +18,7 @@ $ docker run -d -p 3030:3030 \
 omnipede/metadium-did-resolver:latest
 ```
 
-세부 설정을 수정하고 싶다면 먼저 설정 파일을 생성해야 한다. [설정](./docs/config.md) 문서를 읽고 적절한 위치에 설정 파일을 생성하고 해당 설정 파일의
+세부 설정을 수정하고 싶다면 먼저 설정 파일을 생성해야 한다. 설정파일의 이름은 ```application.yaml``` 이다.  [설정](./docs/config.md) 문서를 바탕으로 적절한 위치에 설정 파일을 생성하고 해당 설정 파일의
 절대 경로를 컨테이너의 설정 파일 경로 (```/app/resources```) 로 마운트 시킨다.
 
 ```
