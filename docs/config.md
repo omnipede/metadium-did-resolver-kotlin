@@ -18,13 +18,15 @@ server:
 
 # Logging config
 logging:
-#  file:
-#    path: "./log"
-#    max-size: 10MB
-#    max-history: 30
   level:
     # Change below to change application logging level
     io.omnipede.metadium.did.resolver: INFO
+
+cache:
+  # 단위: 초
+  duration: 600
+  # 캐시될 entry 개수
+  maximumSize: 10000
 
 resolver:
   driverId: "did-meta"
@@ -51,6 +53,9 @@ metadium:
 * ```spring.*``` Normal spring boot configuration
 * ```logging.file``` 파일에 로깅하고 싶다면 사용
 * ```logging.level``` 로그 레벨 수정시 이 부분을 수정한다
+* ```cache```
+    * ```.duration``` 캐시 지속 시간 (초 단위)
+    * ```.maximumSize``` 캐시할 entry 최대 개수
 * ```identityHub.*``` Identity hub service 설정
 * ```metadium```
     * ```.network``` 'mainnet' or 'testnet' 만 가능하다

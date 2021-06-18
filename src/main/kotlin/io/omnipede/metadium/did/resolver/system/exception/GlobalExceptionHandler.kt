@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import org.springframework.web.servlet.NoHandlerFoundException
 import javax.servlet.http.HttpServletRequest
 import javax.validation.ConstraintViolationException
@@ -42,6 +43,15 @@ internal class GlobalExceptionHandler {
      */
     @ExceptionHandler(ConstraintViolationException::class)
     fun handleConstraintViolationException(e: ConstraintViolationException): ResponseEntity<RestError?> {
+        val errorCode = ErrorCode.BAD_REQUEST
+        return createResponseEntityAndLogError(errorCode, e.message!!, e)
+    }
+
+    /**
+     * Argument 에 값을 binding 할 수 없을 경우. 예를 들어 boolean 변수에 'trueeee' 를 대입하려고 할 때 발생
+     */
+    @ExceptionHandler(MethodArgumentTypeMismatchException::class)
+    fun handleMethodArgumentTypeMismatchException(e: MethodArgumentTypeMismatchException): ResponseEntity<RestError?> {
         val errorCode = ErrorCode.BAD_REQUEST
         return createResponseEntityAndLogError(errorCode, e.message!!, e)
     }
@@ -132,8 +142,8 @@ internal class GlobalExceptionHandler {
         e: Throwable
     ): ResponseEntity<RestError?> {
         logError(e, errorCode)
-        val restError = RestError(errorCode.status, detailedMessage)
-        return ResponseEntity<RestError?>(restError, HttpStatus.valueOf(restError.status))
+        val restError = RestError(detailedMessage)
+        return ResponseEntity<RestError?>(restError, HttpStatus.valueOf(errorCode.status))
     }
 
     /**

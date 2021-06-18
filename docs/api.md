@@ -3,15 +3,47 @@
 ## Protocol
 ```http/https```
 
-## GET did document
+## 공통 에러 형식
 
-* Request
+상세 에러 정보는 response ```body``` 에 ```JSON``` 형식으로 표현된다
+
 ```
-$ curl --location --request GET 'http://localhost:3030/1.0/identifiers/did:meta:000000000000000000000000000000000000000000000000000000000000112b'
+{
+    "success": false,
+    "message": "Error reason"
+}
 ```
 
-* Response (OK)
+## GET DID document
 
+DID document 를 조회하는 API. 한번 조회된 document 는 서버 내부에 캐시된다.
+
+### Request
+
+* Method
+  
+```GET```
+
+* URI
+
+```/1.0/identifiers/{did}```
+
+* Path parameter
+
+| key | value |
+| --- | --- |
+| did | Metadium DID |
+
+* Headers
+
+| key | value | default |
+| --- | --- | --- |
+| ```no-cache``` | 캐시 비활성화 여부. ```true``` 일 경우 캐시된 document 가 아닌 원본 document 를 반환한다 | false |
+ 
+
+### Response (OK)
+
+* body
 ```
 {
     "didDocument": {
@@ -58,13 +90,46 @@ $ curl --location --request GET 'http://localhost:3030/1.0/identifiers/did:meta:
 }
 ```
 
-* Response (404)
+### Response (Error)
+| Status | Description |
+| --- | --- |
+| 400 | 요청 형식 오류 |
+| 404 | DID 가 존재하지 않거나 삭제됨 |
+| 500 | 내부 서버 에러 |
 
-DID 에 대한 did document 가 존재하지 않을 때 발생
+
+## DELETE cached document
+
+서버 내부에 캐시된 DID document 를 삭제하는 API
+
+### Request
+
+* Method
+
+```DELETE```
+
+* URI
+
+```/1.0/identifiers/{did}```
+
+* Path parameter
+
+| key | value |
+| --- | --- |
+| did | Metadium DID |
+
+### Response (OK)
 
 ```
 {
-    "status": 404,
-    "message": "Not found"
+    "success": true,
+    "message": "Cache purging of 'did:meta:000000000000000000000000000000000000000000000000000000000000112a' has been completed"
 }
 ```
+
+### Response (Error)
+| Status | Description |
+| --- | --- |
+| 400 | 요청 형식 오류 |
+| 404 | DID 가 존재하지 않음 |
+| 500 | 내부 서버 에러 |
