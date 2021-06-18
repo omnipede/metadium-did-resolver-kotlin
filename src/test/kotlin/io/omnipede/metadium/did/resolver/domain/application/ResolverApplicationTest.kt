@@ -1,10 +1,7 @@
 package io.omnipede.metadium.did.resolver.domain.application
 
 import arrow.core.Either
-import io.omnipede.metadium.did.resolver.domain.entity.AssociatedService
-import io.omnipede.metadium.did.resolver.domain.entity.AssociatedServiceTest
-import io.omnipede.metadium.did.resolver.domain.entity.MetadiumDID
-import io.omnipede.metadium.did.resolver.domain.entity.PublicKey
+import io.omnipede.metadium.did.resolver.domain.entity.*
 import io.omnipede.metadium.did.resolver.domain.ports.*
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -22,6 +19,7 @@ internal class ResolverApplicationTest {
 
     private var contractService: ContractService? = null
     private var envService: EnvService? = null
+    private var documentCache: DocumentCache? = null
     private var resolverApplication: ResolverApplication? = null
 
     private fun <T> any(type: Class<T>): T = Mockito.any<T>(type)
@@ -30,7 +28,8 @@ internal class ResolverApplicationTest {
     fun setup() {
         contractService = mock(ContractService::class.java)
         envService = mock(EnvService::class.java)
-        resolverApplication = ResolverApplication(contractService!!, envService!!)
+        documentCache = mock(DocumentCache::class.java)
+        resolverApplication = ResolverApplication(contractService!!, envService!!, documentCache!!)
     }
 
     companion object {
@@ -74,12 +73,16 @@ internal class ResolverApplicationTest {
         )).`when`(envService)!!
             .loadMetaData()
 
+        doReturn(Optional.empty<DidDocument>())
+            .`when`(documentCache)!!
+            .find(any(MetadiumDID::class.java))
+
         doReturn(Either.Right(PublicKeyListResult(metaManagementKeyList, serviceKeyList)))
             .`when`(contractService)!!
             .findPublicKeyList(this.any(MetadiumDID::class.java))
 
         // When
-        val result = resolverApplication!!.resolve(did)
+        val result = resolverApplication!!.resolve(did, false)
 
         // Then
         assertThat(result.isRight()).isTrue
@@ -96,10 +99,137 @@ internal class ResolverApplicationTest {
                 listOf(metaManagementKeyList, serviceKeyList).flatten()
             )
 
+            assertThat(metadata.resolverMetaData.cached).isFalse
+
             // Meta management key 가 하나 이상일 때 associated service 가 생성되어야 한다
             if (metaManagementKeyList.isNotEmpty())
                 verify(envService)!!.createService(metaManagementKeyList[0])
+
+            // 캐시되어야 한다
+            verify(documentCache)!!.save(any(DidDocument::class.java))
         }
+    }
+
+    @ParameterizedTest(name = "Document 가 캐시되어있을 때 캐시된 document 를 반환한다")
+    @MethodSource("argumentProvider")
+    fun should_return_cached_document_when_document_is_cached(metaManagementKeyList: List<PublicKey>, serviceKeyList: List<PublicKey>) {
+
+        // Given
+        val did = "did:meta:mainnet:000000000000000000000000000000000000000000000000000000000000112b"
+        val network = "mainnet"
+        val registryAddress = "0x42bbff659772231bb63c7c175a1021e080a4cf9d"
+        val driverId = "did-meta"
+
+        doReturn(MetaData(
+            methodMetaData = MethodMetaData(network, registryAddress),
+            resolverMetaData = ResolverMetaData(driverId)
+        )).`when`(envService)!!
+            .loadMetaData()
+
+        val cachedDocument = DidDocument(
+            did = MetadiumDID(did).toString(),
+            publicKeyList = listOf(metaManagementKeyList, serviceKeyList).flatten()
+        )
+
+        doReturn(Optional.of<DidDocument>(cachedDocument))
+            .`when`(documentCache)!!
+            .find(any(MetadiumDID::class.java))
+
+        doReturn(Either.Right(PublicKeyListResult(metaManagementKeyList, serviceKeyList)))
+            .`when`(contractService)!!
+            .findPublicKeyList(this.any(MetadiumDID::class.java))
+
+        // When
+        val result = resolverApplication!!.resolve(did, false)
+
+        // Then
+        assertThat(result.isRight()).isTrue
+        result.map {
+            assertThat(it).isNotNull
+            val (document, metadata) = it
+            assertThat(document).isNotNull
+            assertThat(metadata).isNotNull
+            assertThat(document.id).isEqualTo("did:meta:000000000000000000000000000000000000000000000000000000000000112b")
+            assertThat(document.publicKeyList.size).isEqualTo(
+                listOf(metaManagementKeyList, serviceKeyList).flatten().size
+            )
+            assertThat(document.publicKeyList).containsExactlyInAnyOrderElementsOf(
+                listOf(metaManagementKeyList, serviceKeyList).flatten()
+            )
+            assertThat(metadata.resolverMetaData.cached).isTrue
+            // Contract 호출은 일어나선 안된다
+            verify(contractService, times(0))!!
+                .findPublicKeyList(any(MetadiumDID::class.java))
+        }
+    }
+
+    @ParameterizedTest(name = "noCache 파라미터값이 true 일 때 캐시를 조회하지 않는다")
+    @MethodSource("argumentProvider")
+    fun should_find_document_from_contract_when_noCache_is_true(metaManagementKeyList: List<PublicKey>, serviceKeyList: List<PublicKey>) {
+
+        // Given
+        val did = "did:meta:mainnet:000000000000000000000000000000000000000000000000000000000000112b"
+        val network = "mainnet"
+        val registryAddress = "0x42bbff659772231bb63c7c175a1021e080a4cf9d"
+        val driverId = "did-meta"
+
+        doReturn(MetaData(
+            methodMetaData = MethodMetaData(network, registryAddress),
+            resolverMetaData = ResolverMetaData(driverId)
+        )).`when`(envService)!!
+            .loadMetaData()
+
+        doReturn(Either.Right(PublicKeyListResult(metaManagementKeyList, serviceKeyList)))
+            .`when`(contractService)!!
+            .findPublicKeyList(this.any(MetadiumDID::class.java))
+
+        // When
+        val result = resolverApplication!!.resolve(did, true)
+
+        // Then
+        assertThat(result.isRight()).isTrue
+        result.map {
+            assertThat(it).isNotNull
+            val (document, metadata) = it
+            assertThat(document).isNotNull
+            assertThat(metadata).isNotNull
+            assertThat(document.id).isEqualTo("did:meta:000000000000000000000000000000000000000000000000000000000000112b")
+            assertThat(document.publicKeyList.size).isEqualTo(
+                listOf(metaManagementKeyList, serviceKeyList).flatten().size
+            )
+            assertThat(document.publicKeyList).containsExactlyInAnyOrderElementsOf(
+                listOf(metaManagementKeyList, serviceKeyList).flatten()
+            )
+
+            assertThat(metadata.resolverMetaData.cached).isFalse
+
+            // Meta management key 가 하나 이상일 때 associated service 가 생성되어야 한다
+            if (metaManagementKeyList.isNotEmpty())
+                verify(envService)!!.createService(metaManagementKeyList[0])
+
+            // 캐시를 조회하면 안된다
+            verify(documentCache, times(0))!!.find(any(MetadiumDID::class.java))
+
+            // 캐시되어야 한다
+            verify(documentCache, times(1))!!.save(any(DidDocument::class.java))
+        }
+    }
+
+    @Test
+    @DisplayName("캐시된 document 를 지울 수 있어야 한다")
+    fun should_delete_cached_document() {
+
+        // Given
+        val did = "did:meta:mainnet:000000000000000000000000000000000000000000000000000000000000112b"
+        doReturn(true)
+            .`when`(documentCache)!!
+            .delete(any(MetadiumDID::class.java))
+
+        // When
+        val result = resolverApplication!!.deleteDocumentFromCache(did)
+
+        // Then
+        assertThat(result).isTrue
     }
 
     @Test
@@ -119,7 +249,7 @@ internal class ResolverApplicationTest {
             .loadMetaData()
 
         // When
-        val result = resolverApplication!!.resolve(did)
+        val result = resolverApplication!!.resolve(did, false)
 
         // Then
         assertThat(result.isLeft()).isTrue
@@ -151,7 +281,7 @@ internal class ResolverApplicationTest {
             .findPublicKeyList(this.any(MetadiumDID::class.java))
 
         // When
-        val result = resolverApplication!!.resolve(did)
+        val result = resolverApplication!!.resolve(did, false)
 
         // Then
         assertThat(result.isLeft()).isTrue
