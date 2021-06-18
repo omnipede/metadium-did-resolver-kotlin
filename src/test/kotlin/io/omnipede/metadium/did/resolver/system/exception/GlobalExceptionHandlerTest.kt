@@ -94,6 +94,23 @@ internal class GlobalExceptionHandlerTest {
     }
 
     @Test
+    @DisplayName("MethodArgumentTypeMismatchException 헨들링 테스트")
+    fun handle_MethodArgumentTypeMismatchException_test() {
+
+        // Given
+
+        // When
+        mockMvc!!.perform(
+            get("/api/v1/temp?id=!@#")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            // Then
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andReturn()
+    }
+
+    @Test
     @DisplayName("MissingServletRequestParameterException 헨들링 테스트")
     fun handle_MissingServletRequestParameterException_test() {
 
