@@ -1,7 +1,7 @@
 # metadium-did-resolver-kotlin
 
 ```Kotlin``` 으로 구현한 metadium 블록체인 DID resolver. DID 와 연관된 public key 와 서비스 엔드포인트 정보를 포함하는 문서를 DID document 라고 한다.
-본 서버는 DID 와 맵핑되는 DID document 를 블록체인상에서 찾아 클라이언트에게 반환하는 역할을 수행한다.
+본 서버는 DID 와 맵핑되는 DID document 를 블록체인상에서 찾아 클라이언트에게 반환하는 HTTP REST API 서버 로서의 역할을 수행한다.
 
 ![image](https://user-images.githubusercontent.com/41066039/122346853-6316bf80-cf84-11eb-806f-a37907a2e98e.png)
 
