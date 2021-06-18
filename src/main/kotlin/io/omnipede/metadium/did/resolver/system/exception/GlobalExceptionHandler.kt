@@ -132,8 +132,8 @@ internal class GlobalExceptionHandler {
         e: Throwable
     ): ResponseEntity<RestError?> {
         logError(e, errorCode)
-        val restError = RestError(errorCode.status, detailedMessage)
-        return ResponseEntity<RestError?>(restError, HttpStatus.valueOf(restError.status))
+        val restError = RestError(detailedMessage)
+        return ResponseEntity<RestError?>(restError, HttpStatus.valueOf(errorCode.status))
     }
 
     /**
