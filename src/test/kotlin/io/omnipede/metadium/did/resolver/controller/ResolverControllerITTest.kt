@@ -121,7 +121,7 @@ internal class ResolverControllerITTest {
             // Given
             val did = "did:meta:000000000000000000000000000000000000000000000000000000000000112a"
 
-            doReturn(true)
+            doReturn(Either.Right(true))
                 .`when`(resolverApplication)!!
                 .deleteDocumentFromCache(did)
 
