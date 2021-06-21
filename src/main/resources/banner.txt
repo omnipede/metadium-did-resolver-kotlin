@@ -2,4 +2,5 @@
  |     \   |   |     \      |_____/ |______ |______ |     | |       \  /  |______ |_____/
  |_____/ __|__ |_____/      |    \_ |______ ______| |_____| |_____   \/   |______ |    \_
 
+${application.title} ${application.version}
 ${AnsiColor.GREEN} Powered by Spring Boot ${spring-boot.version} on JAVA ${java.version}

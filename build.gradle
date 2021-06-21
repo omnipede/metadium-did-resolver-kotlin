@@ -51,6 +51,13 @@ dependencies {
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.8.0'
 }
 
+bootJar {
+    manifest {
+        attributes('Implementation-Title':   'Metadium DID resolver',
+                'Implementation-Version': version)
+    }
+}
+
 test {
     useJUnitPlatform()
     finalizedBy 'jacocoTestReport'
