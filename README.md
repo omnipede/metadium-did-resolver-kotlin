@@ -1,7 +1,7 @@
 # metadium-did-resolver-kotlin
 
 ```Kotlin``` 으로 구현한 metadium 블록체인 DID resolver. DID 와 연관된 public key 와 서비스 엔드포인트 정보를 포함하는 문서를 DID document 라고 한다.
-본 서버는 DID 와 맵핑되는 DID document 를 블록체인상에서 찾아 클라이언트에게 반환하는 HTTP REST API 서버 로서의 역할을 수행한다.
+이 응용 프로그램은 DID 와 맵핑되는 DID document 를 블록체인상에서 찾아 클라이언트에게 반환하는 HTTP REST API 서버 로서의 역할을 수행한다.
 
 ![image](https://user-images.githubusercontent.com/41066039/122346853-6316bf80-cf84-11eb-806f-a37907a2e98e.png)
 
@@ -18,7 +18,7 @@ $ docker run -d -p 3030:3030 \
 omnipede/metadium-did-resolver:latest
 ```
 
-세부 설정을 수정하고 싶다면 먼저 설정 파일을 생성해야 한다. 설정파일의 이름은 ```application.yaml``` 고.  [설정](./docs/config.md) 문서를 바탕으로 적절한 위치에 설정 파일을 생성하고 해당 설정 파일의
+세부 설정을 수정하고 싶다면 먼저 설정 파일을 생성해야 한다. 설정파일의 이름은 ```application.yaml``` 고정.  [설정](./docs/config.md) 문서를 바탕으로 적절한 위치에 설정 파일을 생성하고 해당 설정 파일의
 절대 경로를 컨테이너의 설정 파일 경로 (```/app/resources```) 로 마운트 시킨다.
 
 ```
