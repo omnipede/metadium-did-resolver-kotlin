@@ -8,9 +8,9 @@
 
 ## 어플리케이션 실행 방법
 
-***주의. 아직 dockerhub 에 이미지 업로드하지 않음. 추후 업로드 예정***  
+본 어플리케이션은 [Docker](https://www.docker.com/) 로 실행할 수 있다. 어플리케이션의 도커 이미지에 대한 정보는 [Docker hub](https://hub.docker.com/r/omnipede/metadium-did-resolver) 참조.
 
-[기본 설정](./src/main/resources/application.yaml) 값으로 어플리케이션을 실행하고자 한다면 아래 명령어로 실행 ```name``` 은 원하는 값으로 수정한다
+[기본 설정](./src/main/resources/application.yaml) 값으로 어플리케이션을 실행하고자 한다면 아래 명령어로 실행. ```name``` 은 원하는 값으로 수정한다
 
 ```
 $ docker run -d -p 3030:3030 \
@@ -18,7 +18,7 @@ $ docker run -d -p 3030:3030 \
 omnipede/metadium-did-resolver:latest
 ```
 
-세부 설정을 수정하고 싶다면 먼저 설정 파일을 생성해야 한다. 설정파일의 이름은 ```application.yaml``` 이다.  [설정](./docs/config.md) 문서를 바탕으로 적절한 위치에 설정 파일을 생성하고 해당 설정 파일의
+세부 설정을 수정하고 싶다면 먼저 설정 파일을 생성해야 한다. 설정파일의 이름은 ```application.yaml``` 고.  [설정](./docs/config.md) 문서를 바탕으로 적절한 위치에 설정 파일을 생성하고 해당 설정 파일의
 절대 경로를 컨테이너의 설정 파일 경로 (```/app/resources```) 로 마운트 시킨다.
 
 ```
@@ -33,4 +33,3 @@ omnipede/metadium-did-resolver:latest
 
 ## 개발 가이드
 [개발 가이드](./docs/dev.md) 참조
-
